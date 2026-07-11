@@ -1,0 +1,6 @@
+{
+  "name": "IPTV Streaming Portal",
+  "description": "A modern, sleek dark-themed IPTV streaming service dashboard with live TV channels, films, series, active playlist managers, and automated secure billing simulator.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

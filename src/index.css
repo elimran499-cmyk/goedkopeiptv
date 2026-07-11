@@ -1,0 +1,244 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-orbitron: "Orbitron", ui-sans-serif, system-ui, sans-serif;
+  --font-dm-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-wordmark: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-orbitron);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+p {
+  line-height: 1.75;
+}
+
+html, body {
+  font-family: var(--font-sans);
+  background: #f8fafc;
+  min-height: 100vh;
+  color: #1e293b;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  font-size: 16px;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* prevent iOS tap highlight */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* extend footer dark bg to bottom on mobile */
+#home-landing-screen > footer {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ensure inputs don't trigger iOS Safari zoom */
+input, select, textarea {
+  font-size: 16px !important;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Professional card glass */
+.glass-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+
+.glass-card-lg {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05), 0 16px 40px rgba(15, 23, 42, 0.08);
+}
+
+/* Sidebar glass */
+.sidebar-glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 2px 0 20px rgba(15, 23, 42, 0.05);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e2e8f0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Animations and Utilities */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.live-pulse {
+  animation: pulse-ring 2s infinite;
+}
+
+/* Custom shadow effects for sleek dark cards */
+.sleek-card-glow {
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+}
+
+.glow-red {
+  box-shadow: 0 0 40px -10px rgba(239, 68, 68, 0.35);
+}
+
+.glow-red-button {
+  box-shadow: 0 4px 20px -2px rgba(239, 68, 68, 0.4);
+}
+
+.glow-red-sm {
+  box-shadow: 0 0 15px -3px rgba(239, 68, 68, 0.3);
+}
+
+.border-red-glow {
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 0 0 10px -2px rgba(239, 68, 68, 0.1);
+}
+
+/* Custom glassmorphism classes */
+.glass-header {
+  background: rgba(11, 11, 15, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-panel {
+  background: rgba(15, 15, 20, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Dutch flag stripe accent */
+.dutch-stripe {
+  background: linear-gradient(90deg, #AE1C28 0%, #AE1C28 33%, #FFFFFF 33%, #FFFFFF 66%, #21468B 66%, #21468B 100%);
+}
+
+/* Hide scrollbar */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* WhatsApp typing dots */
+@keyframes typing-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30%            { transform: translateY(-4px); opacity: 1; }
+}
+.typing-dot:nth-child(1) { animation: typing-dot 1.2s 0s infinite; }
+.typing-dot:nth-child(2) { animation: typing-dot 1.2s 0.2s infinite; }
+.typing-dot:nth-child(3) { animation: typing-dot 1.2s 0.4s infinite; }
+
+/* Stats ticker scroll */
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 28s linear infinite;
+}
+.ticker-track:hover { animation-play-state: paused; }
+
+/* Confetti particles */
+@keyframes confetti-fall {
+  0%   { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+.confetti-piece {
+  position: fixed;
+  top: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 9999;
+  animation: confetti-fall linear forwards;
+}
+
+/* Dark mode overrides */
+.dark {
+  color-scheme: dark;
+}
+.dark body,
+.dark html {
+  background: linear-gradient(145deg, #0d1117 0%, #0a0e14 45%, #0d1117 100%);
+  color: #e2e8f0;
+}
+.dark .glass-card {
+  background: #161b22;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.dark .glass-card-lg {
+  background: #161b22;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.dark .bg-white { background-color: #161b22 !important; }
+.dark .bg-slate-50 { background-color: #0d1117 !important; }
+.dark .border-slate-200 { border-color: rgba(255,255,255,0.1) !important; }
+.dark .border-slate-100 { border-color: rgba(255,255,255,0.07) !important; }
+.dark .text-slate-900 { color: #f1f5f9 !important; }
+.dark .text-slate-800 { color: #e2e8f0 !important; }
+.dark .text-slate-700 { color: #cbd5e1 !important; }
+.dark .text-slate-600 { color: #94a3b8 !important; }
+.dark .text-slate-500 { color: #64748b !important; }
+.dark .text-slate-400 { color: #475569 !important; }
+.dark .bg-slate-200 { background-color: #21262d !important; }
+.dark .bg-slate-300 { background-color: #2d333b !important; }
+.dark .shadow-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.4) !important; }
+.dark .shadow-lg { box-shadow: 0 10px 30px rgba(0,0,0,0.4) !important; }
+.dark input, .dark select, .dark textarea {
+  background-color: #161b22 !important;
+  color: #e2e8f0 !important;
+  border-color: rgba(255,255,255,0.1) !important;
+}
+.dark table thead tr { background: linear-gradient(to right, #1a1a2e, #16213e) !important; }
+.dark table tbody tr:nth-child(even) { background-color: rgba(255,255,255,0.03) !important; }
