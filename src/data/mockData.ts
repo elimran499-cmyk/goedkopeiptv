@@ -267,7 +267,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   {
     id: "plan-3m",
     name: "3 Maanden",
-    price: 34.99,
+    price: 24,
     billingPeriod: "3 maanden",
     devices: 1,
     resolutions: ["HD (720p)", "4K Ultra HD"],
@@ -287,7 +287,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   {
     id: "plan-6m",
     name: "6 Maanden",
-    price: 44.99,
+    price: 35,
     billingPeriod: "6 maanden",
     devices: 2,
     resolutions: ["4K Ultra HD", "UHD (4K)"],
@@ -307,7 +307,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   {
     id: "plan-15m",
     name: "12+3 Maanden",
-    price: 78,
+    price: 49,
     billingPeriod: "15 maanden",
     devices: 4,
     resolutions: ["4K Ultra HD", "UHD (4K)", "8K HDR"],

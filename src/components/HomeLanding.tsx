@@ -26,9 +26,9 @@ const STATS: StatItem[] = [
 
 
 const SCREENS_PRICING: Record<string, Record<number, number>> = {
-  "plan-3m":  { 1: 34.99, 2: 49.99,  3: 69.99  },
-  "plan-6m":  { 1: 44.99, 2: 79.99,  3: 99.99  },
-  "plan-15m": { 1: 78,    2: 124.99, 3: 179.99 },
+  "plan-3m":  { 1: 24, 2: 39.99,  3: 59.99  },
+  "plan-6m":  { 1: 35, 2: 59.99,  3: 79.99  },
+  "plan-15m": { 1: 49, 2: 89.99,  3: 129.99 },
 };
 
 function openWhatsApp(planName: string, duration: string, price: number, vpn = false, screens = 1) {
@@ -925,7 +925,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
               transition={{ duration: 0.4, delay: 1 }}
               className="font-black text-emerald-600 text-base bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full"
             >
-              goedkopeiptv v.a. €34,99 voor 3 maanden
+              goedkopeiptv v.a. €24 voor 3 maanden
             </motion.span>
           </motion.div>
           <p className="text-slate-500 text-sm font-roboto-slab">
@@ -1283,7 +1283,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
               {[
                 { feature: "Zenders", ours: "20.000+", ziggo: "~150", kpn: "~120" },
                 { feature: "4K Ultra HD", ours: "✓", ziggo: "Beperkt", kpn: "Beperkt" },
-                { feature: "Prijs", ours: "v.a. €34,99 / 3mnd", ziggo: "v.a. €50/mnd", kpn: "v.a. €45/mnd" },
+                { feature: "Prijs", ours: "v.a. €24 / 3mnd", ziggo: "v.a. €50/mnd", kpn: "v.a. €45/mnd" },
                 { feature: "Contract", ours: "Nee", ziggo: "2 jaar", kpn: "2 jaar" },
                 { feature: "Internationaal", ours: "150+ landen", ziggo: "Beperkt", kpn: "Beperkt" },
                 { feature: "Eredivisie", ours: "✓ Gratis", ziggo: "+€20", kpn: "+€20" },

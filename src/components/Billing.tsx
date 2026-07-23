@@ -3,9 +3,9 @@ import { SubscriptionPlan, PaymentMethod, BillingInvoice } from "../types";
 import { SUBSCRIPTION_PLANS } from "../data/mockData";
 
 const SCREENS_PRICING: Record<string, Record<number, number>> = {
-  "plan-3m":  { 1: 34.99, 2: 49.99,  3: 69.99  },
-  "plan-6m":  { 1: 44.99, 2: 79.99,  3: 99.99  },
-  "plan-15m": { 1: 78,    2: 124.99, 3: 179.99 },
+  "plan-3m":  { 1: 24, 2: 39.99,  3: 59.99  },
+  "plan-6m":  { 1: 35, 2: 59.99,  3: 79.99  },
+  "plan-15m": { 1: 49, 2: 89.99,  3: 129.99 },
 };
 import {
   CreditCard, Check, AlertCircle, Calendar, RefreshCw, Wallet, Monitor,
