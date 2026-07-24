@@ -40,7 +40,7 @@ const PACKAGES = [
     id: "premium",
     badge: "PREMIUM VIP",
     name: "Premium VIP Pakket",
-    accent: "gold" as const,
+    accent: "red" as const,
     cta: "Word VIP Nu",
     prices: { "3m": 34.99, "6m": 44.99, "15m": 78.0 } as Record<DurationId, number>,
     features: [
@@ -63,7 +63,7 @@ const PACKAGES = [
     id: "basis",
     badge: "BASIS",
     name: "Basis Pakket",
-    accent: "blue" as const,
+    accent: "orange" as const,
     cta: "Bestel Nu",
     prices: { "3m": 24.99, "6m": 34.99, "15m": 69.99 } as Record<DurationId, number>,
     features: [
@@ -1019,15 +1019,15 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                   key={d.id}
                   onClick={() => setPricingDuration(d.id)}
                   className={`relative flex-1 rounded-xl py-3 px-2 text-center transition-all cursor-pointer ${
-                    active ? "bg-gradient-to-r from-[#7c3aed] to-[#a855f7] text-white shadow-lg" : "text-slate-400 hover:text-white"
+                    active ? "bg-gradient-to-r from-[#ef4444] to-red-500 text-white shadow-lg" : "text-slate-400 hover:text-white"
                   }`}
                 >
                   {d.discount && (
-                    <span className="absolute -top-2 right-1.5 bg-amber-400 text-black text-[9px] font-black px-1.5 py-0.5 rounded-full shadow">{d.discount}</span>
+                    <span className="absolute -top-2 right-1.5 bg-emerald-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full shadow">{d.discount}</span>
                   )}
                   <div className="text-sm font-black leading-tight">{d.label}</div>
                   {d.tag && (
-                    <div className={`text-[10px] font-black tracking-wide mt-0.5 ${active ? "text-amber-200" : "text-amber-400"}`}>{d.tag}</div>
+                    <div className={`text-[10px] font-black tracking-wide mt-0.5 ${active ? "text-white" : "text-[#ef4444]"}`}>{d.tag}</div>
                   )}
                 </button>
               );
@@ -1045,7 +1045,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                   key={n}
                   onClick={() => setPricingDevices(n)}
                   className={`flex-1 rounded-xl py-2.5 px-1 flex items-center justify-center gap-1.5 text-xs sm:text-sm font-black transition-all cursor-pointer ${
-                    active ? "bg-gradient-to-r from-amber-500 to-amber-400 text-black shadow" : "text-slate-400 hover:text-white"
+                    active ? "bg-gradient-to-r from-[#ef4444] to-red-500 text-white shadow" : "text-slate-400 hover:text-white"
                   }`}
                 >
                   <Monitor className="w-4 h-4 shrink-0" />
@@ -1059,22 +1059,22 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
         {/* Package cards */}
         <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto items-stretch">
           {PACKAGES.map((pkg) => {
-            const gold = pkg.accent === "gold";
+            const premium = pkg.accent === "red";
             const durationMeta = PRICING_DURATIONS.find((d) => d.id === pricingDuration)!;
             const price = pkg.prices[pricingDuration] + (pricingDevices - 1) * DEVICE_SURCHARGE;
             const isBestDeal = pricingDuration === "15m";
             return (
               <div
                 key={pkg.id}
-                className={`relative rounded-3xl p-6 md:p-8 flex flex-col h-full transition-all duration-300 border ${
-                  gold
-                    ? "bg-gradient-to-b from-[#1c1410] to-[#0d0b12] border-amber-500/40 shadow-2xl shadow-amber-900/20"
-                    : "bg-gradient-to-b from-[#141821] to-[#0d0f16] border-blue-500/30 shadow-xl"
+                className={`relative rounded-3xl p-6 md:p-8 flex flex-col h-full transition-all duration-300 border bg-gradient-to-b from-[#1a1a2e] to-[#16213e] ${
+                  premium
+                    ? "border-[#ef4444]/40 shadow-2xl shadow-red-900/30 glow-red"
+                    : "border-orange-500/40 shadow-xl shadow-orange-900/20"
                 }`}
               >
                 {isBestDeal && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                    <span className="bg-gradient-to-r from-amber-500 to-amber-400 text-black text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">
+                    <span className={`text-white text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg ${premium ? "bg-gradient-to-r from-[#ef4444] to-red-500" : "bg-gradient-to-r from-orange-500 to-orange-400"}`}>
                       Beste Deal
                     </span>
                   </div>
@@ -1083,15 +1083,15 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                 <div className="flex-1 space-y-5">
                   <div className="space-y-3">
                     <span
-                      className={`inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
-                        gold ? "bg-gradient-to-r from-amber-500 to-amber-400 text-black" : "bg-gradient-to-r from-blue-500 to-cyan-400 text-white"
+                      className={`inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full text-white ${
+                        premium ? "bg-gradient-to-r from-[#ef4444] to-red-500" : "bg-gradient-to-r from-orange-500 to-orange-400"
                       }`}
                     >
-                      {gold && <Star className="w-3 h-3 fill-black" />}
+                      {premium && <Star className="w-3 h-3 fill-white" />}
                       {pkg.badge}
                     </span>
                     <div>
-                      <div className={`text-xs font-black uppercase tracking-widest mb-1 ${gold ? "text-amber-500/80" : "text-blue-400/80"}`}>
+                      <div className={`text-xs font-black uppercase tracking-widest mb-1 ${premium ? "text-red-400/80" : "text-orange-400/80"}`}>
                         {durationMeta.short}
                       </div>
                       <h3 className="text-2xl font-black tracking-tight text-white">{pkg.name}</h3>
@@ -1099,7 +1099,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                   </div>
 
                   <div>
-                    <div className={`text-5xl font-black tracking-tight ${gold ? "text-amber-400" : "text-blue-400"}`}>
+                    <div className={`text-5xl font-black tracking-tight ${premium ? "text-red-400" : "text-orange-400"}`}>
                       €{price.toFixed(2).replace(".", ",")}
                     </div>
                     <div className="flex items-center gap-1.5 mt-2 text-slate-400 text-sm">
@@ -1108,13 +1108,13 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                     </div>
                   </div>
 
-                  <div className={`border-t pt-5 ${gold ? "border-amber-500/15" : "border-blue-500/15"}`}>
+                  <div className={`border-t pt-5 ${premium ? "border-[#ef4444]/15" : "border-orange-500/15"}`}>
                     <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">Wat is inbegrepen</div>
                     <ul className="space-y-2.5">
                       {pkg.features.map((feat) => (
                         <li key={feat} className="flex items-start gap-2.5 text-sm text-slate-200">
-                          <span className={`shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center ${gold ? "bg-amber-500" : "bg-blue-500"}`}>
-                            <Check className={`w-2.5 h-2.5 ${gold ? "text-black" : "text-white"}`} strokeWidth={4} />
+                          <span className={`shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center ${premium ? "bg-[#ef4444]" : "bg-orange-500"}`}>
+                            <Check className="w-2.5 h-2.5 text-white" strokeWidth={4} />
                           </span>
                           {feat}
                         </li>
@@ -1125,10 +1125,10 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
 
                 <button
                   onClick={() => { fireConfetti(); setOrderModal({ plan: pkg.name, period: durationMeta.label, price, vpn: true, screens: pricingDevices }); }}
-                  className={`mt-6 w-full font-black text-sm py-4 rounded-2xl transition-all duration-200 active:scale-95 cursor-pointer ${
-                    gold
-                      ? "bg-gradient-to-r from-amber-500 to-amber-400 text-black hover:brightness-110 shadow-lg shadow-amber-900/30"
-                      : "bg-gradient-to-r from-blue-500 to-cyan-400 text-white hover:brightness-110 shadow-lg shadow-blue-900/30"
+                  className={`mt-6 w-full font-black text-sm py-4 rounded-2xl transition-all duration-200 active:scale-95 cursor-pointer text-white hover:brightness-110 ${
+                    premium
+                      ? "bg-gradient-to-r from-[#ef4444] to-red-500 shadow-lg shadow-red-900/30"
+                      : "bg-gradient-to-r from-orange-500 to-orange-400 shadow-lg shadow-orange-900/30"
                   }`}
                 >
                   {pkg.cta}
