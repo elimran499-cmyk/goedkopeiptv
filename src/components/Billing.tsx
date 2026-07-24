@@ -297,7 +297,7 @@ export default function Billing({
                       ``,
                       `Kunt u mij activeren? Stuur mij alstublieft de betaalgegevens.`,
                     ];
-                    window.open(`https://wa.me/447449708976?text=${encodeURIComponent(lines.join("\n"))}`, "_blank");
+                    window.open(`https://wa.me/447832486269?text=${encodeURIComponent(lines.join("\n"))}`, "_blank");
                   }}
                   className="mt-6 w-full flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20b859] text-white font-black text-xs py-3.5 rounded-xl transition active:scale-95 cursor-pointer shadow-md"
                   id={`btn-plan-select-${plan.id}`}

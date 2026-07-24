@@ -42,7 +42,7 @@ function openWhatsApp(planName: string, duration: string, price: number, vpn = f
     ``,
     `Kunt u mij activeren? Stuur mij alstublieft de betaalgegevens.`,
   ];
-  window.open(`https://wa.me/447449708976?text=${encodeURIComponent(lines.join("\n"))}`, "_blank");
+  window.open(`https://wa.me/447832486269?text=${encodeURIComponent(lines.join("\n"))}`, "_blank");
 }
 
 const TICKER_MESSAGES = [
@@ -545,7 +545,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
             <button
               onClick={() => {
                 const msg = "Hallo, ik wil graag meer informatie over goedkopeiptv. Kunt u mij helpen?";
-                window.open(`https://wa.me/447449708976?text=${encodeURIComponent(msg)}`, "_blank");
+                window.open(`https://wa.me/447832486269?text=${encodeURIComponent(msg)}`, "_blank");
               }}
               className="w-full sm:w-auto bg-[#25D366] hover:bg-[#20b859] text-white text-sm font-extrabold px-6 py-4 rounded-xl shadow-lg flex items-center justify-center gap-2.5 transition duration-200 active:scale-95 cursor-pointer"
             >
@@ -1594,7 +1594,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
           {/* QR code */}
           <div className="flex items-center justify-center gap-4 bg-white/60 border border-slate-200 rounded-2xl px-5 py-4 max-w-xs mx-auto">
             <img
-              src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://wa.me/447449708976%3Ftext%3DHallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
+              src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://wa.me/447832486269%3Ftext%3DHallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
               alt="QR code WhatsApp"
               className="w-16 h-16 rounded-lg shrink-0"
             />
@@ -1606,7 +1606,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
 
           <div className="flex items-center justify-center gap-3 flex-wrap pt-2">
             <button
-              onClick={() => window.open(`https://wa.me/447449708976?text=${encodeURIComponent("Hallo, ik wil graag weten hoe ik IPTV kan instellen op mijn apparaat. Kunt u mij helpen met de installatie?")}`, "_blank")}
+              onClick={() => window.open(`https://wa.me/447832486269?text=${encodeURIComponent("Hallo, ik wil graag weten hoe ik IPTV kan instellen op mijn apparaat. Kunt u mij helpen met de installatie?")}`, "_blank")}
               className="flex items-center gap-2.5 bg-[#25D366] hover:bg-[#20b859] text-white font-black text-sm px-8 py-4 rounded-2xl shadow-lg transition active:scale-95 cursor-pointer"
             >
               <svg className="w-5 h-5 fill-white shrink-0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.104.549 4.082 1.508 5.799L0 24l6.335-1.482A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.001-1.368l-.36-.214-3.719.870.939-3.619-.236-.374A9.818 9.818 0 1 1 12 21.818z"/></svg>
@@ -1638,7 +1638,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
             </p>
             {/* WhatsApp CTA */}
             <button
-              onClick={() => window.open(`https://wa.me/447449708976?text=${encodeURIComponent("Hallo, ik heb een vraag over goedkopeiptv. Kunt u mij helpen?")}`, "_blank")}
+              onClick={() => window.open(`https://wa.me/447832486269?text=${encodeURIComponent("Hallo, ik heb een vraag over goedkopeiptv. Kunt u mij helpen?")}`, "_blank")}
               className="flex items-center gap-2 bg-[#25D366] hover:bg-[#20b859] text-white text-xs font-black px-4 py-2.5 rounded-xl transition cursor-pointer w-fit"
             >
               <svg className="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.104.549 4.082 1.508 5.799L0 24l6.335-1.482A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.001-1.368l-.36-.214-3.719.870.939-3.619-.236-.374A9.818 9.818 0 1 1 12 21.818z"/></svg>
@@ -1658,7 +1658,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
               ].map((item) => (
                 <li key={item.label}>
                   <button
-                    onClick={() => item.tab ? (onSelectTab(item.tab), window.scrollTo({ top: 0, behavior: "smooth" })) : window.open(`https://wa.me/447449708976?text=${encodeURIComponent("Hallo, ik heb een vraag over goedkopeiptv. Kunt u mij helpen?")}`, "_blank")}
+                    onClick={() => item.tab ? (onSelectTab(item.tab), window.scrollTo({ top: 0, behavior: "smooth" })) : window.open(`https://wa.me/447832486269?text=${encodeURIComponent("Hallo, ik heb een vraag over goedkopeiptv. Kunt u mij helpen?")}`, "_blank")}
                     className="text-sm text-slate-400 hover:text-[#ef4444] transition flex items-center gap-2 group"
                   >
                     <span className="w-1 h-1 rounded-full bg-[#ef4444]/40 group-hover:bg-[#ef4444] transition" />

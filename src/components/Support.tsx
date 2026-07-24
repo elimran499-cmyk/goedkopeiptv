@@ -217,7 +217,7 @@ export default function Support() {
         <button
           onClick={() =>
             window.open(
-              `https://wa.me/447449708976?text=${encodeURIComponent("Hallo, ik heb hulp nodig bij het instellen van mijn IPTV-app. Kunt u mij helpen?")}`,
+              `https://wa.me/447832486269?text=${encodeURIComponent("Hallo, ik heb hulp nodig bij het instellen van mijn IPTV-app. Kunt u mij helpen?")}`,
               "_blank"
             )
           }

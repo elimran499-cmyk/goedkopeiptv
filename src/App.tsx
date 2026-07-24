@@ -250,7 +250,7 @@ export default function App() {
             <div className="flex items-center gap-2">
               <span className="text-xs font-black text-[#ef4444]">v.a. €24 eenmalig</span>
               <a
-                href="https://wa.me/447449708976?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
+                href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20b859] text-white text-xs font-black px-4 py-2 rounded-xl transition active:scale-95"
@@ -308,7 +308,7 @@ export default function App() {
                   ))}
                 </ul>
                 <a
-                  href="https://wa.me/447449708976?text=Hallo%2C%20ik%20wil%20graag%20gebruik%20maken%20van%20het%20speciale%20aanbod%20van%203%20maanden%20gratis."
+                  href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20gebruik%20maken%20van%20het%20speciale%20aanbod%20van%203%20maanden%20gratis."
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setShowExitPopup(false)}
@@ -343,7 +343,7 @@ export default function App() {
               ].map(({ label, msg }) => (
                 <a
                   key={label}
-                  href={`https://wa.me/447449708976?text=${encodeURIComponent(msg)}`}
+                  href={`https://wa.me/447832486269?text=${encodeURIComponent(msg)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-white text-slate-800 text-xs font-bold px-3.5 py-2 rounded-full shadow-lg border border-slate-100 hover:bg-[#25D366] hover:text-white hover:border-[#25D366] transition-all duration-150 whitespace-nowrap cursor-pointer"
@@ -373,7 +373,7 @@ export default function App() {
           )}
         </AnimatePresence>
         <a
-          href="https://wa.me/447449708976?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
+          href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => setShowChatHint(false)}
@@ -404,7 +404,7 @@ export default function App() {
               <p className="text-xs text-slate-400 mt-0.5">v.a. <span className="text-[#ef4444] font-black">€49,00</span> eenmalig · 4K · 20.000+</p>
             </div>
             <a
-              href="https://wa.me/447449708976?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
+              href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
               target="_blank"
               rel="noopener noreferrer"
               className="shrink-0 flex items-center gap-2 bg-[#25D366] hover:bg-[#20b859] text-white text-sm font-black px-5 py-3 rounded-2xl transition active:scale-95 cursor-pointer"
@@ -437,7 +437,7 @@ export default function App() {
               <h3 className="text-xl font-black text-slate-900">Wacht! Je verlaat een besparing van <span className="text-[#ef4444]">€494</span></h3>
               <p className="text-sm text-slate-500 leading-relaxed">Het 15 maanden pakket bespaart je €494 ten opzichte van maandelijkse aanbieders. Exclusief voor jou: gratis installatiehulp.</p>
               <a
-                href="https://wa.me/447449708976?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
+                href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setShowRetention(false)}
