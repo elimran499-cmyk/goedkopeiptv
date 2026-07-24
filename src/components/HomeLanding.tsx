@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import React from "react";
 import { MovieOrSeries } from "../types";
-import { SUBSCRIPTION_PLANS } from "../data/mockData";
 import {
   Play, Check, Star, ChevronRight, Monitor,
   ChevronDown, ChevronUp, Zap, Shield, Clock, Globe, Package, Lock, ShoppingCart
@@ -25,11 +24,64 @@ const STATS: StatItem[] = [
 ];
 
 
-const SCREENS_PRICING: Record<string, Record<number, number>> = {
-  "plan-3m":  { 1: 24, 2: 39.99,  3: 59.99  },
-  "plan-6m":  { 1: 35, 2: 59.99,  3: 79.99  },
-  "plan-15m": { 1: 49, 2: 89.99,  3: 129.99 },
-};
+const PRICING_DURATIONS = [
+  { id: "3m",  label: "3 Maanden",    short: "3 MAANDEN" },
+  { id: "6m",  label: "6 Maanden",    short: "6 MAANDEN" },
+  { id: "15m", label: "12+3 Maanden", short: "12+3 MAANDEN", discount: "-50%", tag: "BESTE DEAL" },
+] as const;
+
+type DurationId = typeof PRICING_DURATIONS[number]["id"];
+
+// Extra devices add a flat surcharge on top of the 1-device base price.
+const DEVICE_SURCHARGE = 10;
+
+const PACKAGES = [
+  {
+    id: "premium",
+    badge: "PREMIUM VIP",
+    name: "Premium VIP Pakket",
+    accent: "gold" as const,
+    cta: "Word VIP Nu",
+    prices: { "3m": 34.99, "6m": 44.99, "15m": 78.0 } as Record<DurationId, number>,
+    features: [
+      "SD/HD/FULL HD/4K/8K/HDR-VR",
+      "+80.000 Kanalen + Netflix",
+      "RTL, NPO, ZIGGO, SBS, ESPN, Viaplay, VTM",
+      "+200.000 Films & Series",
+      "Dagelijkse Updates",
+      "Alle Sport PPV Events",
+      "VIP 24/7 Support",
+      "Enterprise Anti-Freeze PRO",
+      "Persoonlijke VIP Manager",
+      "Alle Apparaten",
+      "VPN Inbegrepen",
+      "Exclusieve VIP Content",
+      "Videoland, Netflix, Amazon, HBO, Apple TV, Hulu",
+    ],
+  },
+  {
+    id: "basis",
+    badge: "BASIS",
+    name: "Basis Pakket",
+    accent: "blue" as const,
+    cta: "Bestel Nu",
+    prices: { "3m": 24.99, "6m": 34.99, "15m": 69.99 } as Record<DurationId, number>,
+    features: [
+      "SD/HD/FULL HD Kwaliteit",
+      "+50.000 Kanalen + Netflix",
+      "RTL, NPO, ZIGGO, SBS, ESPN, Viaplay",
+      "+140.000 Films & Series",
+      "Wekelijkse Updates",
+      "24/7 Support NL & BE",
+      "100% Anoniem",
+      "AntiFreeze Technologie",
+      "Alle Apparaten",
+      "VPN Inbegrepen",
+      "Exclusieve NL & BE Content",
+      "Netflix, Amazon, HBO, Apple TV, Hulu",
+    ],
+  },
+] as const;
 
 function openWhatsApp(planName: string, duration: string, price: number, vpn = false, screens = 1) {
   const lines = [
@@ -203,8 +255,8 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
     return () => clearInterval(timer);
   }, [heroMovies.length]);
 
-  const [vpnSelected, setVpnSelected] = useState<Record<string, boolean>>({});
-  const [screensSelected, setScreensSelected] = useState<Record<string, number>>({});
+  const [pricingDuration, setPricingDuration] = useState<DurationId>("3m");
+  const [pricingDevices, setPricingDevices] = useState(1);
   const [openFaqId, setOpenFaqId] = useState<number | null>(0);
   const [faqSearch, setFaqSearch] = useState("");
   const [copiedFaq, setCopiedFaq] = useState<number | null>(null);
@@ -925,7 +977,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
               transition={{ duration: 0.4, delay: 1 }}
               className="font-black text-emerald-600 text-base bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full"
             >
-              goedkopeiptv v.a. €24 voor 3 maanden
+              goedkopeiptv v.a. €24,99 voor 3 maanden
             </motion.span>
           </motion.div>
           <p className="text-slate-500 text-sm font-roboto-slab">
@@ -957,138 +1009,129 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto items-stretch">
-          {SUBSCRIPTION_PLANS.map((plan, idx) => {
-            const isPopular = idx === 2;
-            const hasVpn = !!vpnSelected[plan.id];
-            const screens = screensSelected[plan.id] || 1;
-            const basePrice = SCREENS_PRICING[plan.id]?.[screens] ?? plan.price;
-            const totalPrice = basePrice + (hasVpn ? 10 : 0);
+        {/* Duration toggle */}
+        <div className="max-w-3xl mx-auto">
+          <div className="flex items-stretch gap-1.5 p-1.5 rounded-2xl bg-[#15151f] border border-white/10 shadow-lg">
+            {PRICING_DURATIONS.map((d) => {
+              const active = pricingDuration === d.id;
+              return (
+                <button
+                  key={d.id}
+                  onClick={() => setPricingDuration(d.id)}
+                  className={`relative flex-1 rounded-xl py-3 px-2 text-center transition-all cursor-pointer ${
+                    active ? "bg-gradient-to-r from-[#7c3aed] to-[#a855f7] text-white shadow-lg" : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  {d.discount && (
+                    <span className="absolute -top-2 right-1.5 bg-amber-400 text-black text-[9px] font-black px-1.5 py-0.5 rounded-full shadow">{d.discount}</span>
+                  )}
+                  <div className="text-sm font-black leading-tight">{d.label}</div>
+                  {d.tag && (
+                    <div className={`text-[10px] font-black tracking-wide mt-0.5 ${active ? "text-amber-200" : "text-amber-400"}`}>{d.tag}</div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Device selector */}
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-stretch gap-1 p-1.5 rounded-2xl bg-[#15151f] border border-white/10 shadow-lg">
+            {[1, 2, 3, 4].map((n) => {
+              const active = pricingDevices === n;
+              return (
+                <button
+                  key={n}
+                  onClick={() => setPricingDevices(n)}
+                  className={`flex-1 rounded-xl py-2.5 px-1 flex items-center justify-center gap-1.5 text-xs sm:text-sm font-black transition-all cursor-pointer ${
+                    active ? "bg-gradient-to-r from-amber-500 to-amber-400 text-black shadow" : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  <Monitor className="w-4 h-4 shrink-0" />
+                  <span className="whitespace-nowrap">{n} {n === 1 ? "Apparaat" : "Apparaten"}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Package cards */}
+        <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto items-stretch">
+          {PACKAGES.map((pkg) => {
+            const gold = pkg.accent === "gold";
+            const durationMeta = PRICING_DURATIONS.find((d) => d.id === pricingDuration)!;
+            const price = pkg.prices[pricingDuration] + (pricingDevices - 1) * DEVICE_SURCHARGE;
+            const isBestDeal = pricingDuration === "15m";
             return (
               <div
-                key={plan.id}
-                className={`relative rounded-3xl p-5 md:p-7 flex flex-col h-full transition-all duration-300 ${
-                  isPopular
-                    ? "bg-gradient-to-b from-[#1a1a2e] to-[#16213e] text-white shadow-2xl border border-[#ef4444]/30 glow-red"
-                    : "bg-white border border-slate-200 shadow-lg hover:border-red-200 hover:shadow-xl"
+                key={pkg.id}
+                className={`relative rounded-3xl p-6 md:p-8 flex flex-col h-full transition-all duration-300 border ${
+                  gold
+                    ? "bg-gradient-to-b from-[#1c1410] to-[#0d0b12] border-amber-500/40 shadow-2xl shadow-amber-900/20"
+                    : "bg-gradient-to-b from-[#141821] to-[#0d0f16] border-blue-500/30 shadow-xl"
                 }`}
               >
-                {isPopular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                    <div className="relative bg-[#ef4444] text-white text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full glow-red-sm">
-                      🏆 Beste Waarde — 3 Maanden Gratis
-                      <span className="absolute inset-0 rounded-full animate-ping bg-[#ef4444] opacity-30" />
-                    </div>
-                  </div>
-                )}
-                {!isPopular && (
-                  <div className="absolute top-4 right-4 bg-emerald-500 text-white text-[9px] font-black px-2 py-1 rounded-lg uppercase tracking-wider">
-                    {idx === 0 ? "Bespaar €5" : "Bespaar €15"}
+                {isBestDeal && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                    <span className="bg-gradient-to-r from-amber-500 to-amber-400 text-black text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">
+                      Beste Deal
+                    </span>
                   </div>
                 )}
 
-                {/* grows to fill card height */}
                 <div className="flex-1 space-y-5">
-                  <div>
-                    <div className={`text-xs font-black uppercase tracking-widest mb-1 ${isPopular ? "text-[#ef4444]" : "text-slate-500"}`}>
-                      {plan.billingPeriod}
-                    </div>
-                    <h3 className={`text-2xl font-black tracking-tight ${isPopular ? "text-white" : "text-slate-900"}`}>
-                      {plan.name}
-                    </h3>
-                  </div>
-
-                  <div className="flex items-baseline gap-1">
-                    <span className={`text-3xl font-black transition-all ${isPopular ? "text-white" : "text-slate-900"}`}>
-                      €{totalPrice.toFixed(2)}
-                    </span>
-                    <span className={`text-sm font-bold ${isPopular ? "text-slate-400" : "text-slate-500"}`}>
-                      eenmalig
-                    </span>
-                  </div>
-                  {isPopular && (
-                    <div ref={savingsRef} className="flex items-center gap-2 bg-emerald-500/15 border border-emerald-500/30 rounded-xl px-3 py-2">
-                      <svg viewBox="0 0 24 24" className="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-                      <span className="text-xs font-black text-emerald-400">Je bespaart <span className="text-emerald-300">€{savingsCount}</span> dit jaar vs Ziggo</span>
-                    </div>
-                  )}
-
-                  <ul className={`space-y-1 text-sm border-t pt-5 ${isPopular ? "border-white/10" : "border-slate-100"}`}>
-                    {plan.features.map((feat) => (
-                      <li key={feat} className={`flex items-start gap-2.5 px-2 py-1 rounded-lg transition-all duration-150 cursor-default ${isPopular ? "hover:bg-white/10" : "hover:bg-red-50"}`}>
-                        <Check className="w-4 h-4 shrink-0 mt-0.5 text-[#ef4444]" />
-                        <span className={isPopular ? "text-slate-300" : "text-slate-700"}>{feat}</span>
-                      </li>
-                    ))}
-                    {hasVpn && (
-                      <li className="flex items-start gap-2.5">
-                        <Check className="w-4 h-4 shrink-0 mt-0.5 text-emerald-400" />
-                        <span className={`font-bold ${isPopular ? "text-emerald-400" : "text-emerald-600"}`}>VPN (+€10)</span>
-                      </li>
-                    )}
-                    {screens > 1 && (
-                      <li className="flex items-start gap-2.5">
-                        <Check className="w-4 h-4 shrink-0 mt-0.5 text-emerald-400" />
-                        <span className={`font-bold ${isPopular ? "text-emerald-400" : "text-emerald-600"}`}>{screens} schermen inbegrepen</span>
-                      </li>
-                    )}
-                  </ul>
-                </div>
-
-                {/* VPN add-on toggle */}
-                <div className={`mt-5 rounded-2xl p-3 border ${isPopular ? "border-white/10 bg-white/5" : "border-slate-200 bg-slate-50"}`}>
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-1.5 min-w-0 overflow-hidden">
-                      <svg viewBox="0 0 24 24" className={`w-4 h-4 shrink-0 ${isPopular ? "text-red-300" : "text-[#ef4444]"}`} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                      <span className={`text-sm font-black whitespace-nowrap ${isPopular ? "text-white" : "text-slate-900"}`}>VPN</span>
-                      <span className={`text-xs font-medium whitespace-nowrap ${isPopular ? "text-slate-400" : "text-slate-500"}`}>· +€10,00</span>
-                    </div>
-                    <button
-                      role="switch"
-                      aria-checked={hasVpn}
-                      onClick={() => setVpnSelected(prev => ({ ...prev, [plan.id]: !prev[plan.id] }))}
-                      className={`relative w-11 h-6 rounded-full transition-colors duration-200 shrink-0 focus:outline-none cursor-pointer ${hasVpn ? "bg-[#ef4444]" : isPopular ? "bg-white/20" : "bg-slate-300"}`}
+                  <div className="space-y-3">
+                    <span
+                      className={`inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
+                        gold ? "bg-gradient-to-r from-amber-500 to-amber-400 text-black" : "bg-gradient-to-r from-blue-500 to-cyan-400 text-white"
+                      }`}
                     >
-                      <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${hasVpn ? "left-6" : "left-1"}`} />
-                    </button>
+                      {gold && <Star className="w-3 h-3 fill-black" />}
+                      {pkg.badge}
+                    </span>
+                    <div>
+                      <div className={`text-xs font-black uppercase tracking-widest mb-1 ${gold ? "text-amber-500/80" : "text-blue-400/80"}`}>
+                        {durationMeta.short}
+                      </div>
+                      <h3 className="text-2xl font-black tracking-tight text-white">{pkg.name}</h3>
+                    </div>
                   </div>
-                </div>
 
-                {/* Screens add-on */}
-                <div className={`mt-3 rounded-2xl p-3 border ${isPopular ? "border-white/10 bg-white/5" : "border-slate-200 bg-slate-50"}`}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Monitor className="w-4 h-4 shrink-0 text-[#ef4444]" />
-                    <span className={`text-xs font-black ${isPopular ? "text-white" : "text-slate-900"}`}>Aantal schermen</span>
+                  <div>
+                    <div className={`text-5xl font-black tracking-tight ${gold ? "text-amber-400" : "text-blue-400"}`}>
+                      €{price.toFixed(2).replace(".", ",")}
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-2 text-slate-400 text-sm">
+                      <Monitor className="w-4 h-4 shrink-0" />
+                      {pricingDevices} {pricingDevices === 1 ? "apparaat" : "apparaten"} inbegrepen
+                    </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    {([1, 2, 3] as const).map((n) => (
-                      <button
-                        key={n}
-                        onClick={() => setScreensSelected(prev => ({ ...prev, [plan.id]: n }))}
-                        className={`text-sm font-black py-2.5 rounded-xl transition-all cursor-pointer ${
-                          screens === n
-                            ? "bg-[#ef4444] text-white shadow"
-                            : isPopular
-                            ? "bg-white/10 text-slate-300 hover:bg-white/20"
-                            : "bg-slate-200 text-slate-600 hover:bg-slate-300"
-                        }`}
-                      >
-                        {n} ✓
-                      </button>
-                    ))}
+
+                  <div className={`border-t pt-5 ${gold ? "border-amber-500/15" : "border-blue-500/15"}`}>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">Wat is inbegrepen</div>
+                    <ul className="space-y-2.5">
+                      {pkg.features.map((feat) => (
+                        <li key={feat} className="flex items-start gap-2.5 text-sm text-slate-200">
+                          <span className={`shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center ${gold ? "bg-amber-500" : "bg-blue-500"}`}>
+                            <Check className={`w-2.5 h-2.5 ${gold ? "text-black" : "text-white"}`} strokeWidth={4} />
+                          </span>
+                          {feat}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
 
                 <button
-                  onClick={() => { fireConfetti(); setOrderModal({ plan: plan.name, period: plan.billingPeriod, price: totalPrice, vpn: hasVpn, screens }); }}
-                  className={`mt-4 w-full flex items-center justify-center gap-2.5 font-black text-sm py-4 rounded-2xl transition-all duration-200 active:scale-95 cursor-pointer ${
-                    isPopular
-                      ? "bg-[#25D366] hover:bg-[#20b859] text-white shadow-lg shadow-green-900/30"
-                      : "bg-[#25D366] hover:bg-[#20b859] text-white shadow-md"
+                  onClick={() => { fireConfetti(); setOrderModal({ plan: pkg.name, period: durationMeta.label, price, vpn: true, screens: pricingDevices }); }}
+                  className={`mt-6 w-full font-black text-sm py-4 rounded-2xl transition-all duration-200 active:scale-95 cursor-pointer ${
+                    gold
+                      ? "bg-gradient-to-r from-amber-500 to-amber-400 text-black hover:brightness-110 shadow-lg shadow-amber-900/30"
+                      : "bg-gradient-to-r from-blue-500 to-cyan-400 text-white hover:brightness-110 shadow-lg shadow-blue-900/30"
                   }`}
                 >
-                  <svg className="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.104.549 4.082 1.508 5.799L0 24l6.335-1.482A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.001-1.368l-.36-.214-3.719.870.939-3.619-.236-.374A9.818 9.818 0 1 1 12 21.818z"/></svg>
-                  Bestellen via WhatsApp
+                  {pkg.cta}
                 </button>
               </div>
             );
@@ -1283,7 +1326,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
               {[
                 { feature: "Zenders", ours: "20.000+", ziggo: "~150", kpn: "~120" },
                 { feature: "4K Ultra HD", ours: "✓", ziggo: "Beperkt", kpn: "Beperkt" },
-                { feature: "Prijs", ours: "v.a. €24 / 3mnd", ziggo: "v.a. €50/mnd", kpn: "v.a. €45/mnd" },
+                { feature: "Prijs", ours: "v.a. €24,99 / 3mnd", ziggo: "v.a. €50/mnd", kpn: "v.a. €45/mnd" },
                 { feature: "Contract", ours: "Nee", ziggo: "2 jaar", kpn: "2 jaar" },
                 { feature: "Internationaal", ours: "150+ landen", ziggo: "Beperkt", kpn: "Beperkt" },
                 { feature: "Eredivisie", ours: "✓ Gratis", ziggo: "+€20", kpn: "+€20" },
@@ -1785,7 +1828,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                 <div className="flex justify-between"><span className="text-slate-500 font-medium">Pakket</span><span className="font-black text-slate-900">{orderModal.plan}</span></div>
                 <div className="flex justify-between"><span className="text-slate-500 font-medium">Duur</span><span className="font-black text-slate-900">{orderModal.period}</span></div>
                 <div className="flex justify-between"><span className="text-slate-500 font-medium">Schermen</span><span className="font-black text-slate-900">{orderModal.screens}x</span></div>
-                {orderModal.vpn && <div className="flex justify-between"><span className="text-slate-500 font-medium">VPN</span><span className="font-black text-emerald-600">Inbegrepen (+€10)</span></div>}
+                {orderModal.vpn && <div className="flex justify-between"><span className="text-slate-500 font-medium">VPN</span><span className="font-black text-emerald-600">Inbegrepen</span></div>}
                 <div className="border-t border-slate-200 pt-3 flex justify-between items-center">
                   <span className="font-black text-slate-900">Totaal</span>
                   <span className="text-2xl font-black text-[#ef4444]">€{orderModal.price.toFixed(2)}</span>

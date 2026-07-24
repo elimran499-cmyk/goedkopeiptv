@@ -248,7 +248,7 @@ export default function App() {
               <span className="text-xs text-slate-500 hidden md:block">20.000+ zenders · 4K Ultra HD · Binnen 5 min actief</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-black text-[#ef4444]">v.a. €24 eenmalig</span>
+              <span className="text-xs font-black text-[#ef4444]">v.a. €24,99 eenmalig</span>
               <a
                 href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
                 target="_blank"
