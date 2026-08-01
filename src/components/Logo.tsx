@@ -9,9 +9,9 @@
  */
 export function Wordmark({
   className = "",
-  tldClassName = "text-[#ef4444]",
+  tldClassName = "text-[#E0345F]",
   showTld = true,
-  playColor = "#ef4444",
+  playColor = "#E0345F",
 }: {
   className?: string;
   tldClassName?: string;

@@ -209,7 +209,7 @@ export default function MediaPlayer({
         <div className="flex items-center justify-between glass-card backdrop-blur border border-slate-200 px-5 py-4 rounded-xl shadow-lg">
           <div className="flex items-center gap-3 min-w-0">
             {activeChannel ? (
-              <div className="w-10 h-10 rounded-xl bg-red-600/10 border border-red-500/20 text-xl flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-rose-600/10 border border-rose-500/20 text-xl flex items-center justify-center">
                 {activeChannel.logo}
               </div>
             ) : (
@@ -262,7 +262,7 @@ export default function MediaPlayer({
               onClick={() => setShowStats(!showStats)}
               className={`p-2.5 rounded-lg border transition ${
                 showStats 
-                  ? "bg-orange-500/15 border-orange-500/40 text-orange-400"
+                  ? "bg-rose-500/15 border-rose-500/40 text-rose-400"
                   : "bg-slate-800/40 border-slate-700/50 text-slate-600 hover:text-white"
               }`}
               title="Stream Diagnostics"
@@ -318,8 +318,8 @@ export default function MediaPlayer({
                 className="absolute inset-0 z-20 bg-slate-900/95 flex flex-col items-center justify-center gap-4"
               >
                 <div className="relative flex items-center justify-center">
-                  <div className="w-14 h-14 rounded-full border-t-2 border-r-2 border-red-500 animate-spin" />
-                  <Radio className="w-5 h-5 text-red-400 absolute animate-pulse" />
+                  <div className="w-14 h-14 rounded-full border-t-2 border-r-2 border-rose-500 animate-spin" />
+                  <Radio className="w-5 h-5 text-rose-400 absolute animate-pulse" />
                 </div>
                 <div className="text-center">
                   <p className="font-semibold text-sm text-slate-900 uppercase tracking-widest font-mono">
@@ -342,7 +342,7 @@ export default function MediaPlayer({
               <motion.div 
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="w-16 h-16 rounded-full bg-red-600/90 hover:bg-red-500 text-white flex items-center justify-center shadow-xl shadow-red-600/30 transition transform hover:scale-110"
+                className="w-16 h-16 rounded-full bg-rose-600/90 hover:bg-rose-500 text-white flex items-center justify-center shadow-xl shadow-rose-600/30 transition transform hover:scale-110"
               >
                 <Play className="w-7 h-7 fill-white translate-x-0.5" />
               </motion.div>
@@ -365,7 +365,7 @@ export default function MediaPlayer({
                     <span className="text-[11px] font-mono text-slate-600">{currentTime}</span>
                     <div className="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden cursor-pointer relative group/progress">
                       <div 
-                        className="h-full bg-gradient-to-r from-red-500 to-fuchsia-500 rounded-full relative" 
+                        className="h-full bg-gradient-to-r from-rose-500 to-fuchsia-500 rounded-full relative" 
                         style={{ width: `${progress}%` }}
                       >
                         <span className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full scale-0 group-hover/progress:scale-100 transition" />
@@ -435,7 +435,7 @@ export default function MediaPlayer({
                           setVolume(Number(e.target.value));
                           setIsMuted(false);
                         }}
-                        className="w-16 h-1 bg-slate-800 rounded-full appearance-none cursor-pointer accent-red-500 opacity-60 group-hover/volume:opacity-100 transition duration-300"
+                        className="w-16 h-1 bg-slate-800 rounded-full appearance-none cursor-pointer accent-rose-500 opacity-60 group-hover/volume:opacity-100 transition duration-300"
                         title="Volume Level"
                       />
                     </div>
@@ -453,7 +453,7 @@ export default function MediaPlayer({
                     
                     {/* Quality selector dropdown style */}
                     <div className="flex items-center gap-1.5 bg-slate-200/60 border border-slate-800 px-2.5 py-1 rounded-lg text-xs font-medium text-slate-800">
-                      <Layers className="w-3.5 h-3.5 text-red-400" />
+                      <Layers className="w-3.5 h-3.5 text-rose-400" />
                       <select 
                         value={quality} 
                         onChange={(e) => {
@@ -492,12 +492,12 @@ export default function MediaPlayer({
           <div className="glass-card p-5 rounded-xl shadow-lg flex flex-col gap-4">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div className="flex items-center gap-2">
-                <Clock className="w-4.5 h-4.5 text-orange-400" />
+                <Clock className="w-4.5 h-4.5 text-rose-400" />
                 <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider font-mono">
                   Electronic TV Program Guide (EPG)
                 </h3>
               </div>
-              <span className="text-xs text-orange-400 font-medium bg-orange-500/10 border border-orange-500/20 px-2.5 py-0.5 rounded-full">
+              <span className="text-xs text-rose-400 font-medium bg-rose-500/10 border border-rose-500/20 px-2.5 py-0.5 rounded-full">
                 7 Days Catch-Up Available
               </span>
             </div>
@@ -531,12 +531,12 @@ export default function MediaPlayer({
 
               {/* Airing next */}
               <div className="bg-slate-50 border border-slate-800 p-4 rounded-xl flex items-start gap-3.5 relative overflow-hidden group">
-                <div className="absolute top-0 left-0 w-1 h-full bg-orange-500" />
-                <div className="bg-orange-500/10 border border-orange-500/20 text-orange-400 text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded shrink-0">
+                <div className="absolute top-0 left-0 w-1 h-full bg-rose-500" />
+                <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded shrink-0">
                   Up Next
                 </div>
                 <div>
-                  <h4 className="font-semibold text-sm text-slate-950 mt-0.5 group-hover:text-orange-400 transition">
+                  <h4 className="font-semibold text-sm text-slate-950 mt-0.5 group-hover:text-rose-400 transition">
                     {activeChannel.category === "Sports" ? "Post-Match Analysis & Recap" : 
                      activeChannel.category === "News" ? "Deep Dive Insight: Planet Economics" : 
                      activeChannel.category === "Movies" ? "Late Night Suspense Selection" :
@@ -545,7 +545,7 @@ export default function MediaPlayer({
                   <p className="text-xs text-slate-600 mt-1">
                     19:30 - 21:00 • High-definition analysis featuring veteran studio hosts and global analysts.
                   </p>
-                  <p className="text-[10px] font-mono text-orange-400 mt-3 flex items-center gap-1">
+                  <p className="text-[10px] font-mono text-rose-400 mt-3 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     Starts in 45 minutes
                   </p>
@@ -563,7 +563,7 @@ export default function MediaPlayer({
         {/* Search header */}
         <div className="pb-4 border-b border-slate-200">
           <div className="flex items-center gap-2 mb-3">
-            <Tv className="w-5 h-5 text-orange-400" />
+            <Tv className="w-5 h-5 text-rose-400" />
             <h3 className="font-extrabold text-sm text-slate-900 uppercase tracking-wider font-mono">
               Quick Stream Switcher
             </h3>
@@ -577,7 +577,7 @@ export default function MediaPlayer({
                 onClick={() => setPlayerCategory(cat)}
                 className={`text-[11px] font-bold px-3 py-1.5 rounded-lg shrink-0 transition ${
                   playerCategory === cat
-                    ? "bg-orange-600 text-white"
+                    ? "bg-rose-600 text-white"
                     : "bg-slate-50 text-slate-600 border border-slate-800 hover:text-white"
                 }`}
               >
@@ -606,18 +606,18 @@ export default function MediaPlayer({
                 }}
                 className={`w-full text-left p-3 rounded-xl border flex items-center gap-3.5 transition group relative ${
                   isChActive
-                    ? "bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/40 shadow-inner"
+                    ? "bg-gradient-to-r from-rose-500/10 to-rose-500/10 border-rose-500/40 shadow-inner"
                     : "bg-slate-50/75 border-slate-200 hover:border-slate-300 hover:bg-slate-100"
                 }`}
               >
                 {/* Active left bar */}
                 {isChActive && (
-                  <span className="absolute left-0 top-3 bottom-3 w-1 bg-orange-500 rounded-r" />
+                  <span className="absolute left-0 top-3 bottom-3 w-1 bg-rose-500 rounded-r" />
                 )}
 
                 {/* Logo */}
                 <div className={`w-9 h-9 rounded-lg text-lg flex items-center justify-center shrink-0 ${
-                  isChActive ? "bg-orange-500/20 text-white" : "bg-slate-800/30 text-slate-800"
+                  isChActive ? "bg-rose-500/20 text-white" : "bg-slate-800/30 text-slate-800"
                 }`}>
                   {ch.logo}
                 </div>
@@ -625,7 +625,7 @@ export default function MediaPlayer({
                 {/* Info details */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-1.5">
-                    <span className={`font-semibold text-xs truncate ${isChActive ? "text-orange-300 font-bold" : "text-slate-900 group-hover:text-white"}`}>
+                    <span className={`font-semibold text-xs truncate ${isChActive ? "text-rose-300 font-bold" : "text-slate-900 group-hover:text-white"}`}>
                       {ch.name}
                     </span>
                     {isChFav && (

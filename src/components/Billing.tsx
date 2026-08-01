@@ -197,12 +197,12 @@ export default function Billing({
                 id={`plan-card-${plan.id}`}
                 className={`relative rounded-2xl p-6 flex flex-col h-full transition-all duration-300 ${
                   isPopular
-                    ? "bg-gradient-to-b from-[#1a1a2e] to-[#16213e] text-white border border-[#ef4444]/30 shadow-2xl glow-red"
+                    ? "bg-gradient-to-b from-[#1A0A10] to-[#2B0F1A] text-white border border-[#E0345F]/30 shadow-2xl glow-red"
                     : "glass-card hover:shadow-lg"
                 }`}
               >
                 {isPopular && (
-                  <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#ef4444] text-white text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full glow-red-sm whitespace-nowrap">
+                  <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#E0345F] text-white text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full glow-red-sm whitespace-nowrap">
                     🏆 Beste Waarde — 3 Maanden Gratis
                   </span>
                 )}
@@ -210,7 +210,7 @@ export default function Billing({
                 {/* grows to fill card height */}
                 <div className="flex-1 space-y-4">
                   <div>
-                    <div className={`text-[10px] font-black uppercase tracking-widest mb-1 ${isPopular ? "text-[#ef4444]" : "text-slate-400"}`}>{plan.billingPeriod}</div>
+                    <div className={`text-[10px] font-black uppercase tracking-widest mb-1 ${isPopular ? "text-[#E0345F]" : "text-slate-400"}`}>{plan.billingPeriod}</div>
                     <h4 className={`font-extrabold text-xl tracking-tight ${isPopular ? "text-white" : "text-slate-900"}`}>{plan.name}</h4>
                   </div>
                   <div className="flex items-baseline gap-1">
@@ -220,7 +220,7 @@ export default function Billing({
                   <ul className={`space-y-2 text-xs pt-3 border-t ${isPopular ? "border-white/10" : "border-slate-100"}`}>
                     {plan.features.map((feat) => (
                       <li key={feat} className="flex items-start gap-2">
-                        <Check className="w-3.5 h-3.5 text-[#ef4444] shrink-0 mt-0.5" />
+                        <Check className="w-3.5 h-3.5 text-[#E0345F] shrink-0 mt-0.5" />
                         <span className={isPopular ? "text-slate-300" : "text-slate-700"}>{feat}</span>
                       </li>
                     ))}
@@ -243,7 +243,7 @@ export default function Billing({
                 <div className={`mt-4 rounded-xl p-3 border ${isPopular ? "border-white/10 bg-white/5" : "border-slate-200 bg-slate-50"}`}>
                   <label className="flex items-center justify-between gap-2 cursor-pointer select-none">
                     <div className="flex items-center gap-1.5 min-w-0 overflow-hidden">
-                      <svg viewBox="0 0 24 24" className={`w-4 h-4 shrink-0 ${isPopular ? "text-red-300" : "text-[#ef4444]"}`} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                      <svg viewBox="0 0 24 24" className={`w-4 h-4 shrink-0 ${isPopular ? "text-rose-300" : "text-[#E0345F]"}`} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                       <span className={`text-xs font-black whitespace-nowrap ${isPopular ? "text-white" : "text-slate-900"}`}>VPN</span>
                       <span className={`text-[10px] font-medium whitespace-nowrap ${isPopular ? "text-slate-400" : "text-slate-500"}`}>· +€10,00</span>
                     </div>
@@ -251,7 +251,7 @@ export default function Billing({
                       role="switch"
                       aria-checked={hasVpn}
                       onClick={() => setVpnSelected(prev => ({ ...prev, [plan.id]: !prev[plan.id] }))}
-                      className={`relative w-11 h-6 rounded-full transition-colors duration-200 shrink-0 focus:outline-none ${hasVpn ? "bg-[#ef4444]" : isPopular ? "bg-white/20" : "bg-slate-300"}`}
+                      className={`relative w-11 h-6 rounded-full transition-colors duration-200 shrink-0 focus:outline-none ${hasVpn ? "bg-[#E0345F]" : isPopular ? "bg-white/20" : "bg-slate-300"}`}
                     >
                       <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${hasVpn ? "left-6" : "left-1"}`} />
                     </button>
@@ -262,7 +262,7 @@ export default function Billing({
                 <div className={`mt-3 rounded-xl p-3 border ${isPopular ? "border-white/10 bg-white/5" : "border-slate-200 bg-slate-50"}`}>
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-1.5 shrink-0">
-                      <Monitor className="w-4 h-4 shrink-0 text-[#ef4444]" />
+                      <Monitor className="w-4 h-4 shrink-0 text-[#E0345F]" />
                       <span className={`text-xs font-black whitespace-nowrap ${isPopular ? "text-white" : "text-slate-900"}`}>Schermen</span>
                     </div>
                     <div className="flex gap-1">
@@ -272,7 +272,7 @@ export default function Billing({
                           onClick={() => setScreensSelected(prev => ({ ...prev, [plan.id]: n }))}
                           className={`text-[10px] font-black px-2 py-1 rounded-lg transition-all whitespace-nowrap cursor-pointer ${
                             screens === n
-                              ? "bg-[#ef4444] text-white shadow"
+                              ? "bg-[#E0345F] text-white shadow"
                               : isPopular
                               ? "bg-white/10 text-slate-300 hover:bg-white/20"
                               : "bg-slate-200 text-slate-600 hover:bg-slate-300"
@@ -315,7 +315,7 @@ export default function Billing({
                   }`}
                   id={`btn-plan-checkout-${plan.id}`}
                 >
-                  <CreditCard className="w-4 h-4 text-[#ef4444]" />
+                  <CreditCard className="w-4 h-4 text-[#E0345F]" />
                   Direct online afrekenen
                 </button>
               </div>
@@ -362,7 +362,7 @@ export default function Billing({
                 id={`pm-item-${pm.id}`}
               >
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-slate-200 border border-slate-800 rounded-xl text-orange-400">
+                  <div className="p-3 bg-slate-200 border border-slate-800 rounded-xl text-rose-400">
                     <CreditCard className="w-5 h-5" />
                   </div>
                   <div>
@@ -371,7 +371,7 @@ export default function Billing({
                         {pm.type === "ideal" ? "🏦 iDEAL" : pm.type === "card" ? `${pm.details.cardBrand} Card` : pm.type === "paypal" ? "PayPal" : "Crypto"}
                       </span>
                       {pm.isDefault && (
-                        <span className="text-[9px] bg-red-500/15 text-[#ef4444] border border-red-500/30 px-1.5 py-0.5 rounded font-bold uppercase">
+                        <span className="text-[9px] bg-rose-500/15 text-[#E0345F] border border-rose-500/30 px-1.5 py-0.5 rounded font-bold uppercase">
                           Standaard
                         </span>
                       )}
@@ -389,7 +389,7 @@ export default function Billing({
                   {!pm.isDefault && (
                     <button 
                       onClick={() => onSetDefaultPaymentMethod(pm.id)}
-                      className="p-1 text-xs font-semibold text-orange-400 hover:text-orange-300 hover:underline px-2"
+                      className="p-1 text-xs font-semibold text-rose-400 hover:text-rose-300 hover:underline px-2"
                     >
                       Set Default
                     </button>
@@ -397,7 +397,7 @@ export default function Billing({
                   <button 
                     onClick={() => onDeletePaymentMethod(pm.id)}
                     disabled={pm.isDefault && paymentMethods.length > 1}
-                    className="p-2 text-slate-700 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition"
+                    className="p-2 text-slate-700 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition"
                     title="Remove Payment"
                   >
                     <X className="w-4 h-4" />
@@ -420,7 +420,7 @@ export default function Billing({
                   type="button"
                   onClick={() => setSelectedPayType("card")}
                   className={`text-[10px] py-1.5 rounded-md font-black transition uppercase ${
-                    selectedPayType === "card" ? "bg-[#ef4444] text-white shadow glow-red-sm" : "text-slate-700 hover:text-slate-300"
+                    selectedPayType === "card" ? "bg-[#E0345F] text-white shadow glow-red-sm" : "text-slate-700 hover:text-slate-300"
                   }`}
                 >
                   Card
@@ -429,7 +429,7 @@ export default function Billing({
                   type="button"
                   onClick={() => setSelectedPayType("paypal")}
                   className={`text-[10px] py-1.5 rounded-md font-black transition uppercase ${
-                    selectedPayType === "paypal" ? "bg-[#ef4444] text-white shadow glow-red-sm" : "text-slate-700 hover:text-slate-300"
+                    selectedPayType === "paypal" ? "bg-[#E0345F] text-white shadow glow-red-sm" : "text-slate-700 hover:text-slate-300"
                   }`}
                 >
                   PayPal
@@ -438,7 +438,7 @@ export default function Billing({
                   type="button"
                   onClick={() => setSelectedPayType("crypto")}
                   className={`text-[10px] py-1.5 rounded-md font-black transition uppercase ${
-                    selectedPayType === "crypto" ? "bg-[#ef4444] text-white shadow glow-red-sm" : "text-slate-700 hover:text-slate-300"
+                    selectedPayType === "crypto" ? "bg-[#E0345F] text-white shadow glow-red-sm" : "text-slate-700 hover:text-slate-300"
                   }`}
                 >
                   Crypto
@@ -500,7 +500,7 @@ export default function Billing({
               )}
 
               {formError && (
-                <p className="text-[10px] text-red-400 flex items-center gap-1 ">
+                <p className="text-[10px] text-rose-400 flex items-center gap-1 ">
                   <AlertCircle className="w-3 h-3" />
                   {formError}
                 </p>
@@ -519,7 +519,7 @@ export default function Billing({
           <div className="border-t border-slate-200 pt-4.5">
             <div className="flex items-center justify-between">
               <div className="flex items-start gap-2.5">
-                <Calendar className="w-5 h-5 text-orange-400 shrink-0 mt-0.5" />
+                <Calendar className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold text-sm text-slate-900 block">Automated Renew Settings</span>
                   <span className="text-xs text-slate-700 block mt-0.5">Recurring charges will trigger automatically on your default billing card.</span>
@@ -530,7 +530,7 @@ export default function Billing({
               <button
                 onClick={() => setAutoRenew(!autoRenew)}
                 className={`w-11 h-6.5 rounded-full p-1 transition duration-300 relative focus:outline-none ${
-                  autoRenew ? "bg-orange-600" : "bg-slate-800"
+                  autoRenew ? "bg-rose-600" : "bg-slate-800"
                 }`}
               >
                 <div className={`w-4.5 h-4.5 rounded-full bg-white shadow-md transform transition duration-300 ${
@@ -564,7 +564,7 @@ export default function Billing({
                 Track historic payments and download certified invoice statements.
               </p>
             </div>
-            <FileText className="w-5 h-5 text-orange-400 shrink-0" />
+            <FileText className="w-5 h-5 text-rose-400 shrink-0" />
           </div>
 
           <div className="space-y-3.5 max-h-[300px] overflow-y-auto pr-1">
@@ -654,7 +654,7 @@ export default function Billing({
                         onClick={() => setSelectedPayType("ideal" as "card")}
                         className={`p-4 rounded-xl border text-left flex items-center justify-between gap-4 transition ${
                           (selectedPayType as string) === "ideal"
-                            ? "bg-red-500/10 border-[#ef4444]"
+                            ? "bg-rose-500/10 border-[#E0345F]"
                             : "bg-slate-50 border-slate-800 hover:border-slate-700"
                         }`}
                       >
@@ -666,8 +666,8 @@ export default function Billing({
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-[9px] bg-red-500/10 text-[#ef4444] border border-red-500/20 px-1.5 py-0.5 rounded font-bold uppercase">Aanbevolen</span>
-                          {(selectedPayType as string) === "ideal" && <CheckCircle className="w-5 h-5 text-[#ef4444] shrink-0" />}
+                          <span className="text-[9px] bg-rose-500/10 text-[#E0345F] border border-rose-500/20 px-1.5 py-0.5 rounded font-bold uppercase">Aanbevolen</span>
+                          {(selectedPayType as string) === "ideal" && <CheckCircle className="w-5 h-5 text-[#E0345F] shrink-0" />}
                         </div>
                       </button>
 
@@ -676,7 +676,7 @@ export default function Billing({
                         onClick={() => setSelectedPayType("card")}
                         className={`p-4 rounded-xl border text-left flex items-center justify-between gap-4 transition ${
                           selectedPayType === "card" 
-                            ? "bg-emerald-500/10 border-[#ef4444]" 
+                            ? "bg-emerald-500/10 border-[#E0345F]" 
                             : "bg-slate-50 border-slate-800 hover:border-slate-700"
                         }`}
                       >
@@ -695,7 +695,7 @@ export default function Billing({
                         onClick={() => setSelectedPayType("paypal")}
                         className={`p-4 rounded-xl border text-left flex items-center justify-between gap-4 transition ${
                           selectedPayType === "paypal" 
-                            ? "bg-emerald-500/10 border-[#ef4444]" 
+                            ? "bg-emerald-500/10 border-[#E0345F]" 
                             : "bg-slate-50 border-slate-800 hover:border-slate-700"
                         }`}
                       >
@@ -714,7 +714,7 @@ export default function Billing({
                         onClick={() => setSelectedPayType("crypto")}
                         className={`p-4 rounded-xl border text-left flex items-center justify-between gap-4 transition ${
                           selectedPayType === "crypto" 
-                            ? "bg-emerald-500/10 border-[#ef4444]" 
+                            ? "bg-emerald-500/10 border-[#E0345F]" 
                             : "bg-slate-50 border-slate-800 hover:border-slate-700"
                         }`}
                       >
@@ -739,7 +739,7 @@ export default function Billing({
 
                     <button
                       onClick={() => setCheckoutStep("fill_form")}
-                      className="w-full bg-[#ef4444] hover:bg-red-600 text-white font-extrabold text-xs py-3.5 px-4 rounded-xl shadow-lg transition glow-red-button"
+                      className="w-full bg-[#E0345F] hover:bg-rose-600 text-white font-extrabold text-xs py-3.5 px-4 rounded-xl shadow-lg transition glow-red-button"
                       id="checkout-step-next"
                     >
                       Continue to Payment Credentials
@@ -763,7 +763,7 @@ export default function Billing({
                             value={cardHolder} 
                             onChange={(e) => setCardHolder(e.target.value)}
                             placeholder="e.g. EL IMRAN" 
-                            className="w-full bg-slate-50 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-950 outline-none focus:border-orange-500"
+                            className="w-full bg-slate-50 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-950 outline-none focus:border-rose-500"
                           />
                         </div>
                         <div>
@@ -774,7 +774,7 @@ export default function Billing({
                             value={cardNumber} 
                             onChange={(e) => setCardNumber(e.target.value)}
                             placeholder="4242 4242 4242 4242" 
-                            className="w-full bg-slate-50 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-950  outline-none focus:border-orange-500"
+                            className="w-full bg-slate-50 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-950  outline-none focus:border-rose-500"
                           />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
@@ -786,7 +786,7 @@ export default function Billing({
                               value={cardExpiry} 
                               onChange={(e) => setCardExpiry(e.target.value)}
                               placeholder="MM/YY" 
-                              className="w-full bg-slate-50 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-950  outline-none focus:border-orange-500"
+                              className="w-full bg-slate-50 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-950  outline-none focus:border-rose-500"
                             />
                           </div>
                           <div>
@@ -798,7 +798,7 @@ export default function Billing({
                               onChange={(e) => setCardCVC(e.target.value)}
                               placeholder="•••" 
                               maxLength={4}
-                              className="w-full bg-slate-50 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-950  outline-none focus:border-orange-500"
+                              className="w-full bg-slate-50 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-950  outline-none focus:border-rose-500"
                             />
                           </div>
                         </div>
@@ -817,7 +817,7 @@ export default function Billing({
                           value={paypalEmail} 
                           onChange={(e) => setPaypalEmail(e.target.value)}
                           placeholder="user.iptv@example.com" 
-                          className="w-full bg-slate-50 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-950  outline-none focus:border-orange-500"
+                          className="w-full bg-slate-50 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-950  outline-none focus:border-rose-500"
                         />
                       </div>
                     )}
@@ -901,7 +901,7 @@ export default function Billing({
                     )}
 
                     {formError && (
-                      <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 px-3.5 py-2 rounded-xl text-xs">
+                      <div className="flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 text-rose-400 px-3.5 py-2 rounded-xl text-xs">
                         <AlertCircle className="w-4 h-4 shrink-0" />
                         <span>{formError}</span>
                       </div>
@@ -918,7 +918,7 @@ export default function Billing({
 
                       <button
                         type="submit"
-                        className="flex-1 bg-gradient-to-r from-orange-600 to-red-600 text-white text-xs font-bold py-3 px-4 rounded-xl hover:from-orange-500 hover:to-red-500 transition shadow-lg shadow-orange-600/15"
+                        className="flex-1 bg-gradient-to-r from-rose-600 to-rose-600 text-white text-xs font-bold py-3 px-4 rounded-xl hover:from-rose-500 hover:to-rose-500 transition shadow-lg shadow-rose-600/15"
                         id="checkout-btn-auth"
                       >
                         {selectedPayType === "crypto" ? "I Have Broadcasted Transaction" : "Authorize Automated Payment"}
@@ -930,8 +930,8 @@ export default function Billing({
                 {checkoutStep === "confirming" && (
                   <div className="py-12 flex flex-col items-center justify-center gap-4 text-center">
                     <div className="relative flex items-center justify-center">
-                      <div className="w-16 h-16 rounded-full border-t-2 border-r-2 border-orange-500 animate-spin" />
-                      <CreditCard className="w-6 h-6 text-orange-400 absolute animate-pulse" />
+                      <div className="w-16 h-16 rounded-full border-t-2 border-r-2 border-rose-500 animate-spin" />
+                      <CreditCard className="w-6 h-6 text-rose-400 absolute animate-pulse" />
                     </div>
                     <div>
                       <h4 className="font-bold text-sm text-slate-950 uppercase tracking-widest ">
@@ -997,7 +997,7 @@ export default function Billing({
               </button>
 
               <div className="border-b border-slate-100 pb-5">
-                <div className="flex items-center gap-2 text-orange-600 font-extrabold text-lg">
+                <div className="flex items-center gap-2 text-rose-600 font-extrabold text-lg">
                   <span>goedkopeiptv IPTV</span>
                 </div>
                 <p className="text-[10px] text-slate-700  mt-1">Invoice Statement #{activeInvoice.id}</p>
@@ -1036,7 +1036,7 @@ export default function Billing({
 
                 <div className="flex justify-between items-center border-t border-slate-100 pt-4 text-sm font-bold text-slate-900">
                   <span>Totaal Betaald</span>
-                  <span className="text-lg font-black text-[#ef4444]">€{activeInvoice.amount.toFixed(2)}</span>
+                  <span className="text-lg font-black text-[#E0345F]">€{activeInvoice.amount.toFixed(2)}</span>
                 </div>
 
                 <div className="bg-emerald-50 border border-emerald-100 p-3.5 rounded-xl text-xs text-emerald-800 flex items-center gap-2.5">

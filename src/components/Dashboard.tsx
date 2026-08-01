@@ -113,11 +113,11 @@ export default function Dashboard({ playlists, onAddPlaylist, onDeletePlaylist, 
       
       {/* Welcome Banner Card */}
       <div className="bg-gradient-to-r from-slate-900 via-[#0e1726] to-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-2xl glow-purple">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl -z-10" />
-        <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-red-600/5 rounded-full blur-3xl -z-10" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-rose-500/5 rounded-full blur-3xl -z-10" />
+        <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-rose-600/5 rounded-full blur-3xl -z-10" />
 
         <div className="max-w-3xl">
-          <span className="text-xs bg-orange-500/10 text-orange-400 border border-orange-500/20 px-3 py-1 rounded-full font-bold uppercase tracking-wider">
+          <span className="text-xs bg-rose-500/10 text-rose-400 border border-rose-500/20 px-3 py-1 rounded-full font-bold uppercase tracking-wider">
             Premium IPTV Console
           </span>
           <h2 className="text-2xl md:text-3xl font-extrabold text-white mt-4 tracking-tight leading-tight">
@@ -142,7 +142,7 @@ export default function Dashboard({ playlists, onAddPlaylist, onDeletePlaylist, 
             </div>
             <div className="bg-slate-50/80 border border-slate-200 p-4 rounded-xl backdrop-blur-sm">
               <span className="text-xs text-slate-700 block uppercase tracking-wider font-mono">Streamkwaliteit</span>
-              <span className="text-xl md:text-2xl font-black text-orange-400 mt-1.5 block">
+              <span className="text-xl md:text-2xl font-black text-rose-400 mt-1.5 block">
                 4K & 8K HDR
               </span>
             </div>
@@ -200,7 +200,7 @@ export default function Dashboard({ playlists, onAddPlaylist, onDeletePlaylist, 
 
                 <button 
                   onClick={() => onDeletePlaylist(pl.id)}
-                  className="p-2 text-slate-700 hover:text-red-400 rounded-lg hover:bg-red-500/10 transition shrink-0"
+                  className="p-2 text-slate-700 hover:text-rose-400 rounded-lg hover:bg-rose-500/10 transition shrink-0"
                   title="Verwijder afspeellijst"
                   id={`del-pl-${pl.id}`}
                 >
@@ -230,7 +230,7 @@ export default function Dashboard({ playlists, onAddPlaylist, onDeletePlaylist, 
                   value={playlistName}
                   onChange={(e) => setPlaylistName(e.target.value)}
                   placeholder="bijv. Mijn Premium IPTV"
-                  className="w-full bg-slate-50 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-950 placeholder:text-slate-600 focus:border-orange-500 outline-none transition"
+                  className="w-full bg-slate-50 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-950 placeholder:text-slate-600 focus:border-rose-500 outline-none transition"
                   id="pl-input-name"
                 />
               </div>
@@ -241,14 +241,14 @@ export default function Dashboard({ playlists, onAddPlaylist, onDeletePlaylist, 
                   value={playlistUrl}
                   onChange={(e) => setPlaylistUrl(e.target.value)}
                   placeholder="https://server.iptv.com/get.m3u"
-                  className="w-full bg-slate-50 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-950 placeholder:text-slate-600 focus:border-orange-500 outline-none transition"
+                  className="w-full bg-slate-50 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-950 placeholder:text-slate-600 focus:border-rose-500 outline-none transition"
                   id="pl-input-url"
                 />
               </div>
             </div>
 
             {formError && (
-              <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 px-3.5 py-2 rounded-xl text-xs">
+              <div className="flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 text-rose-400 px-3.5 py-2 rounded-xl text-xs">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{formError}</span>
               </div>
@@ -264,7 +264,7 @@ export default function Dashboard({ playlists, onAddPlaylist, onDeletePlaylist, 
             <button
               type="submit"
               disabled={isImporting}
-              className="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white text-sm font-semibold py-3 px-5 rounded-xl hover:from-orange-500 hover:to-red-500 transition shadow-lg shadow-orange-600/15 flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-rose-600 to-rose-600 text-white text-sm font-semibold py-3 px-5 rounded-xl hover:from-rose-500 hover:to-rose-500 transition shadow-lg shadow-rose-600/15 flex items-center justify-center gap-2"
               id="pl-btn-submit"
             >
               {isImporting ? (
@@ -293,7 +293,7 @@ export default function Dashboard({ playlists, onAddPlaylist, onDeletePlaylist, 
                 Test je netwerkverbinding voor optimale streamkwaliteit.
               </p>
             </div>
-            <Activity className="w-5 h-5 text-orange-400 shrink-0" />
+            <Activity className="w-5 h-5 text-rose-400 shrink-0" />
           </div>
 
           {/* Test area */}
@@ -424,7 +424,7 @@ export default function Dashboard({ playlists, onAddPlaylist, onDeletePlaylist, 
 
                 <button 
                   onClick={() => handleKickDevice(dev.id)}
-                  className="text-slate-700 hover:text-red-400 bg-slate-200/40 hover:bg-red-500/10 px-2.5 py-1 rounded-md text-[10px] font-bold border border-slate-800 hover:border-red-500/20 transition cursor-pointer"
+                  className="text-slate-700 hover:text-rose-400 bg-slate-200/40 hover:bg-rose-500/10 px-2.5 py-1 rounded-md text-[10px] font-bold border border-slate-800 hover:border-rose-500/20 transition cursor-pointer"
                 >
                   Verbreek
                 </button>

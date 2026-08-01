@@ -57,7 +57,7 @@ export default function Catalog({ moviesAndSeries, onPlayMedia }: CatalogProps) 
           {/* Banner Contents */}
           <div className="relative z-10 p-6 md:p-10 max-w-2xl">
             <div className="flex items-center gap-2 mb-2.5">
-              <span className="text-[10px] bg-[#ef4444] text-white font-extrabold px-2 py-0.5 rounded uppercase tracking-wider font-mono glow-red-sm">
+              <span className="text-[10px] bg-[#E0345F] text-white font-extrabold px-2 py-0.5 rounded uppercase tracking-wider font-mono glow-red-sm">
 🇳🇱 TRENDING NL
               </span>
               <span className="flex items-center gap-1 text-xs text-amber-400 font-bold">
@@ -77,7 +77,7 @@ export default function Catalog({ moviesAndSeries, onPlayMedia }: CatalogProps) 
             <div className="flex items-center gap-3.5 mt-5">
               <button
                 onClick={() => onPlayMedia(featured)}
-                className="bg-[#ef4444] hover:bg-red-600 text-white text-xs md:text-sm font-extrabold px-5 py-2.5 rounded-xl shadow-lg shadow-emerald-900/20 flex items-center gap-2 transition transform active:scale-95 cursor-pointer glow-red-button"
+                className="bg-[#E0345F] hover:bg-rose-600 text-white text-xs md:text-sm font-extrabold px-5 py-2.5 rounded-xl shadow-lg shadow-emerald-900/20 flex items-center gap-2 transition transform active:scale-95 cursor-pointer glow-red-button"
                 id="btn-play-featured"
               >
                 <Play className="w-4 h-4 fill-white" />
@@ -103,7 +103,7 @@ export default function Catalog({ moviesAndSeries, onPlayMedia }: CatalogProps) 
           <button
             onClick={() => setActiveType("all")}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black tracking-wide transition cursor-pointer ${
-              activeType === "all" ? "bg-[#ef4444] text-white shadow-md" : "text-slate-600 hover:text-slate-900"
+              activeType === "all" ? "bg-[#E0345F] text-white shadow-md" : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Alles
@@ -111,7 +111,7 @@ export default function Catalog({ moviesAndSeries, onPlayMedia }: CatalogProps) 
           <button
             onClick={() => setActiveType("movie")}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black tracking-wide transition cursor-pointer ${
-              activeType === "movie" ? "bg-[#ef4444] text-white shadow-md" : "text-slate-600 hover:text-slate-900"
+              activeType === "movie" ? "bg-[#E0345F] text-white shadow-md" : "text-slate-600 hover:text-slate-900"
             }`}
           >
             <Film className="w-3.5 h-3.5" />
@@ -120,7 +120,7 @@ export default function Catalog({ moviesAndSeries, onPlayMedia }: CatalogProps) 
           <button
             onClick={() => setActiveType("series")}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black tracking-wide transition cursor-pointer ${
-              activeType === "series" ? "bg-[#ef4444] text-white shadow-md" : "text-slate-600 hover:text-slate-900"
+              activeType === "series" ? "bg-[#E0345F] text-white shadow-md" : "text-slate-600 hover:text-slate-900"
             }`}
           >
             <Tv className="w-3.5 h-3.5" />
@@ -136,7 +136,7 @@ export default function Catalog({ moviesAndSeries, onPlayMedia }: CatalogProps) 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Zoek films, series, acteurs..."
-            className="w-full bg-white border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#ef4444] outline-none transition"
+            className="w-full bg-white border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#E0345F] outline-none transition"
             id="catalog-search"
           />
           {searchQuery && (
@@ -158,8 +158,8 @@ export default function Catalog({ moviesAndSeries, onPlayMedia }: CatalogProps) 
             onClick={() => setSelectedGenre(g)}
             className={`text-xs font-black px-4 py-2 rounded-xl shrink-0 transition-all border cursor-pointer ${
               selectedGenre === g
-                ? "bg-[#ef4444] text-white border-[#ef4444] shadow-md"
-                : "bg-white text-slate-600 border-slate-200 hover:border-red-300 hover:text-[#ef4444]"
+                ? "bg-[#E0345F] text-white border-[#E0345F] shadow-md"
+                : "bg-white text-slate-600 border-slate-200 hover:border-rose-300 hover:text-[#E0345F]"
             }`}
           >
             {g}
@@ -190,7 +190,7 @@ export default function Catalog({ moviesAndSeries, onPlayMedia }: CatalogProps) 
                     e.stopPropagation();
                     onPlayMedia(item);
                   }}
-                  className="w-full bg-[#ef4444] hover:bg-red-600 text-white font-extrabold text-xs py-2 px-3 rounded-lg shadow flex items-center justify-center gap-1.5 transition glow-red-button"
+                  className="w-full bg-[#E0345F] hover:bg-rose-600 text-white font-extrabold text-xs py-2 px-3 rounded-lg shadow flex items-center justify-center gap-1.5 transition glow-red-button"
                 >
                   <Play className="w-3.5 h-3.5 fill-white" />
                   Nu Kijken
@@ -224,7 +224,7 @@ export default function Catalog({ moviesAndSeries, onPlayMedia }: CatalogProps) 
 
               <div className="flex flex-wrap gap-1 mt-2.5">
                 {item.genre.slice(0, 2).map((g) => (
-                  <span key={g} className="text-[9px] bg-[#ef4444]/10 border border-[#ef4444]/25 text-[#ef4444] px-1.5 py-0.5 rounded-md font-bold">
+                  <span key={g} className="text-[9px] bg-[#E0345F]/10 border border-[#E0345F]/25 text-[#E0345F] px-1.5 py-0.5 rounded-md font-bold">
                     {g}
                   </span>
                 ))}
@@ -287,7 +287,7 @@ export default function Catalog({ moviesAndSeries, onPlayMedia }: CatalogProps) 
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1.5">
-                      <span className="text-[10px] bg-[#ef4444] text-white px-1.5 py-0.5 rounded font-extrabold font-mono uppercase glow-red-sm">
+                      <span className="text-[10px] bg-[#E0345F] text-white px-1.5 py-0.5 rounded font-extrabold font-mono uppercase glow-red-sm">
                         {selectedMedia.type}
                       </span>
                       <span className="text-xs font-mono text-slate-600 font-semibold">{selectedMedia.year}</span>
@@ -410,7 +410,7 @@ export default function Catalog({ moviesAndSeries, onPlayMedia }: CatalogProps) 
                       onPlayMedia(selectedMedia);
                       setSelectedMedia(null);
                     }}
-                    className="w-full bg-[#ef4444] hover:bg-red-600 text-white font-extrabold text-xs py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition transform active:scale-95 mt-2 cursor-pointer glow-red-button"
+                    className="w-full bg-[#E0345F] hover:bg-rose-600 text-white font-extrabold text-xs py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition transform active:scale-95 mt-2 cursor-pointer glow-red-button"
                     id="btn-modal-stream"
                   >
                     <Play className="w-3.5 h-3.5 fill-white" />

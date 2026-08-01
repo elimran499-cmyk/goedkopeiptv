@@ -17,58 +17,13 @@ import Support from "./components/Support";
 import { Wordmark } from "./components/Logo";
 import { motion, AnimatePresence } from "motion/react";
 
-const ORDER_TOASTS = [
-  { name: "Daan", city: "Amsterdam", plan: "15 maanden pakket" },
-  { name: "Lars", city: "Rotterdam", plan: "6 maanden pakket" },
-  { name: "Sem", city: "Utrecht", plan: "15 maanden pakket" },
-  { name: "Tim", city: "Den Haag", plan: "3 maanden pakket" },
-  { name: "Bram", city: "Eindhoven", plan: "15 maanden pakket" },
-  { name: "Thijs", city: "Tilburg", plan: "6 maanden pakket" },
-  { name: "Lotte", city: "Groningen", plan: "15 maanden pakket" },
-  { name: "Emma", city: "Breda", plan: "3 maanden pakket" },
-  { name: "Finn", city: "Nijmegen", plan: "15 maanden pakket" },
-  { name: "Ruben", city: "Haarlem", plan: "6 maanden pakket" },
-  { name: "Noor", city: "Leiden", plan: "15 maanden pakket" },
-  { name: "Joris", city: "Maastricht", plan: "3 maanden pakket" },
-  { name: "Sanne", city: "Arnhem", plan: "15 maanden pakket" },
-  { name: "Koen", city: "Zwolle", plan: "6 maanden pakket" },
-  { name: "Fleur", city: "Almere", plan: "15 maanden pakket" },
-  { name: "Pieter", city: "Delft", plan: "3 maanden pakket" },
-  { name: "Iris", city: "Dordrecht", plan: "15 maanden pakket" },
-  { name: "Wouter", city: "Amersfoort", plan: "6 maanden pakket" },
-  { name: "Roos", city: "Enschede", plan: "15 maanden pakket" },
-  { name: "Niels", city: "Apeldoorn", plan: "3 maanden pakket" },
-  { name: "Eva", city: "Alkmaar", plan: "15 maanden pakket" },
-  { name: "Jasper", city: "Deventer", plan: "6 maanden pakket" },
-  { name: "Hanna", city: "Venlo", plan: "15 maanden pakket" },
-  { name: "Stijn", city: "Hilversum", plan: "3 maanden pakket" },
-  { name: "Lieke", city: "Zaandam", plan: "15 maanden pakket" },
-  { name: "Bas", city: "Roosendaal", plan: "6 maanden pakket" },
-  { name: "Vera", city: "Bergen op Zoom", plan: "15 maanden pakket" },
-  { name: "Martijn", city: "Leeuwarden", plan: "3 maanden pakket" },
-  { name: "Julia", city: "Middelburg", plan: "15 maanden pakket" },
-  { name: "Rick", city: "Gouda", plan: "6 maanden pakket" },
-];
-
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>("home");
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [showExitPopup, setShowExitPopup] = useState(false);
-  const [showChatHint, setShowChatHint] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [orderToast, setOrderToast] = useState<typeof ORDER_TOASTS[0] | null>(null);
-  const [darkMode, setDarkMode] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false); // unused but kept for scroll handler
-  const [showChips] = useState(true);
   const [showRetention, setShowRetention] = useState(false);
-  const toggleDarkMode = () => {
-    setDarkMode(d => {
-      const next = !d;
-      document.documentElement.classList.toggle("dark", next);
-      return next;
-    });
-  };
-  const toastIdx = useRef(0);
   const exitFired = useRef(false);
 
   useEffect(() => {
@@ -76,11 +31,6 @@ export default function App() {
     const onPop = () => { history.pushState(null, "", window.location.href); setShowRetention(true); };
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
-  }, []);
-
-  useEffect(() => {
-    const t2 = setTimeout(() => setShowChatHint(true), 20000);
-    return () => { clearTimeout(t2); };
   }, []);
 
   useEffect(() => {
@@ -95,17 +45,6 @@ export default function App() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    const show = () => {
-      const t = ORDER_TOASTS[toastIdx.current % ORDER_TOASTS.length];
-      toastIdx.current++;
-      setOrderToast(t);
-      setTimeout(() => setOrderToast(null), 5000);
-    };
-    const first = setTimeout(show, 12000);
-    const interval = setInterval(show, 22000);
-    return () => { clearTimeout(first); clearInterval(interval); };
-  }, []);
   useEffect(() => {
     const onMouseOut = (e: MouseEvent) => {
       if (e.clientY <= 10 && !exitFired.current && activeTab === "home") {
@@ -199,10 +138,10 @@ export default function App() {
     <div id="streamvibe-root" className="min-h-screen text-slate-950">
       {/* Scroll progress bar */}
       <div className="fixed top-0 inset-x-0 z-[60] h-0.5 bg-transparent pointer-events-none">
-        <div className="h-full bg-[#ef4444] transition-all duration-100" style={{ width: `${scrollProgress}%` }} />
+        <div className="h-full bg-[#E0345F] transition-all duration-100" style={{ width: `${scrollProgress}%` }} />
       </div>
 
-      <Navigation activeTab={activeTab} setActiveTab={setActiveTab} userPlan={getUserPlanName()} userStatus={userStatus} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+      <Navigation activeTab={activeTab} setActiveTab={setActiveTab} userPlan={getUserPlanName()} userStatus={userStatus} />
       <main id="main-content" className="flex-1 pt-24 px-3 sm:px-4 md:px-8 lg:px-10 overflow-x-hidden">
         <div className="max-w-6xl mx-auto pt-8 space-y-8">
         <AnimatePresence mode="wait">
@@ -212,8 +151,8 @@ export default function App() {
             {activeTab === "livetv" && (
               <div className="space-y-6">
                 <div className="flex glass-card p-1 rounded-2xl max-w-sm">
-                  <button onClick={() => setLivetvSubTab("player")} className={`flex-1 text-center py-2.5 rounded-xl text-xs font-black tracking-wide transition cursor-pointer ${livetvSubTab === "player" ? "bg-[#ef4444] text-white shadow-md" : "text-slate-700 hover:text-slate-950"}`}>Live Channels Player</button>
-                  <button onClick={() => setLivetvSubTab("sync")} className={`flex-1 text-center py-2.5 rounded-xl text-xs font-black tracking-wide transition cursor-pointer ${livetvSubTab === "sync" ? "bg-[#ef4444] text-white shadow-md" : "text-slate-700 hover:text-slate-950"}`}>Provider Sync & Metrics</button>
+                  <button onClick={() => setLivetvSubTab("player")} className={`flex-1 text-center py-2.5 rounded-xl text-xs font-black tracking-wide transition cursor-pointer ${livetvSubTab === "player" ? "bg-[#E0345F] text-white shadow-md" : "text-slate-700 hover:text-slate-950"}`}>Live Channels Player</button>
+                  <button onClick={() => setLivetvSubTab("sync")} className={`flex-1 text-center py-2.5 rounded-xl text-xs font-black tracking-wide transition cursor-pointer ${livetvSubTab === "sync" ? "bg-[#E0345F] text-white shadow-md" : "text-slate-700 hover:text-slate-950"}`}>Provider Sync & Metrics</button>
                 </div>
                 <AnimatePresence mode="wait">
                   <motion.div key={livetvSubTab} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.15 }}>
@@ -248,7 +187,7 @@ export default function App() {
               <span className="text-xs text-slate-500 hidden md:block">20.000+ zenders · 4K Ultra HD · Binnen 5 min actief</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-black text-[#ef4444]">v.a. €24,99 eenmalig</span>
+              <span className="text-xs font-black text-[#E0345F]">v.a. €24,99 eenmalig</span>
               <a
                 href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
                 target="_blank"
@@ -275,23 +214,23 @@ export default function App() {
               onClick={e => e.stopPropagation()}
               className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden"
             >
-              <div className="bg-gradient-to-r from-[#1a1a2e] to-[#16213e] px-7 pt-7 pb-5 text-center space-y-2 relative">
+              <div className="bg-gradient-to-r from-[#1A0A10] to-[#2B0F1A] px-7 pt-7 pb-5 text-center space-y-2 relative">
                 <button onClick={() => setShowExitPopup(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white cursor-pointer leading-none">
                   <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
                 <div className="flex justify-center">
-                  <svg viewBox="0 0 24 24" className="w-10 h-10 text-[#ef4444]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <svg viewBox="0 0 24 24" className="w-10 h-10 text-[#E0345F]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                    <circle cx="18" cy="5" r="3" className="fill-[#ef4444] stroke-none"/>
+                    <circle cx="18" cy="5" r="3" className="fill-[#E0345F] stroke-none"/>
                   </svg>
                 </div>
                 <h3 className="text-xl font-black text-white">Wacht! Verlaat je al?</h3>
                 <p className="text-slate-400 text-xs">Je mist de beste IPTV-deal van Nederland</p>
               </div>
               <div className="p-7 space-y-4 text-center">
-                <div className="bg-red-50 border border-red-200 rounded-2xl p-4 space-y-1">
+                <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 space-y-1">
                   <div className="text-xs text-slate-500 font-medium">Speciaal aanbod voor jou</div>
-                  <div className="text-2xl font-black text-[#ef4444]">3 maanden gratis</div>
+                  <div className="text-2xl font-black text-[#E0345F]">3 maanden gratis</div>
                   <div className="text-xs text-slate-600">bij bestelling van 15 maanden — vandaag alleen</div>
                 </div>
                 <ul className="text-xs text-slate-600 space-y-2 text-left">
@@ -324,63 +263,16 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* Floating WhatsApp button + chat hint */}
+      {/* Floating WhatsApp button */}
       <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 flex flex-col items-end gap-2">
-        {/* Quick-reply chips */}
-        <AnimatePresence>
-          {showChips && (
-            <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 300, damping: 26 }}
-              className="flex flex-col items-end gap-1.5"
-            >
-              {[
-                { label: "Ik wil bestellen", msg: "Hallo, ik wil graag een IPTV pakket bestellen. Kunt u mij helpen?" },
-                { label: "Ik heb een vraag", msg: "Hallo, ik heb een vraag over goedkopeiptv." },
-                { label: "Installatiehulp", msg: "Hallo, ik heb hulp nodig bij de installatie van goedkopeiptv." },
-              ].map(({ label, msg }) => (
-                <a
-                  key={label}
-                  href={`https://wa.me/447832486269?text=${encodeURIComponent(msg)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-white text-slate-800 text-xs font-bold px-3.5 py-2 rounded-full shadow-lg border border-slate-100 hover:bg-[#25D366] hover:text-white hover:border-[#25D366] transition-all duration-150 whitespace-nowrap cursor-pointer"
-                >
-                  {label}
-                </a>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
-          {showChatHint && (
-            <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="relative bg-white rounded-2xl rounded-br-sm shadow-2xl px-4 py-3 max-w-[200px] border border-slate-100"
-            >
-              <button onClick={() => setShowChatHint(false)} className="absolute -top-2 -right-2 w-5 h-5 bg-slate-200 hover:bg-slate-300 rounded-full flex items-center justify-center cursor-pointer">
-                <svg viewBox="0 0 24 24" className="w-3 h-3 text-slate-600" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              </button>
-              <p className="text-xs font-bold text-slate-800">Hoi! Vragen?</p>
-              <p className="text-xs text-slate-500 mt-0.5">Wij reageren binnen 2 min 👋</p>
-              <div className="absolute -bottom-1.5 right-4 w-3 h-3 bg-white border-r border-b border-slate-100 rotate-45" />
-            </motion.div>
-          )}
-        </AnimatePresence>
         <a
           href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => setShowChatHint(false)}
           className="w-14 h-14 bg-[#25D366] hover:bg-[#20b859] rounded-full shadow-2xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95 relative"
         >
-          <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping" />
-          <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full" />
+          <span className="absolute -top-1 -right-1 w-3 h-3 bg-rose-500 rounded-full animate-ping" />
+          <span className="absolute -top-1 -right-1 w-3 h-3 bg-rose-500 rounded-full" />
           <svg className="w-7 h-7 fill-white" viewBox="0 0 24 24">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
             <path d="M12 0C5.373 0 0 5.373 0 12c0 2.104.549 4.082 1.508 5.799L0 24l6.335-1.482A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.001-1.368l-.36-.214-3.719.870.939-3.619-.236-.374A9.818 9.818 0 1 1 12 21.818z"/>
@@ -396,12 +288,12 @@ export default function App() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-0 inset-x-0 z-[55] sm:hidden bg-[#0d1117] border-t border-white/10 px-5 flex items-center gap-3"
+            className="fixed bottom-0 inset-x-0 z-[55] sm:hidden bg-[#0E0E10] border-t border-white/10 px-5 flex items-center gap-3"
             style={{ paddingBottom: "max(12px, env(safe-area-inset-bottom))", paddingTop: "12px" }}
           >
             <div className="flex-1 min-w-0">
               <p className="text-sm font-black text-white truncate">15 maanden pakket</p>
-              <p className="text-xs text-slate-400 mt-0.5">v.a. <span className="text-[#ef4444] font-black">€49,00</span> eenmalig · 4K · 20.000+</p>
+              <p className="text-xs text-slate-400 mt-0.5">v.a. <span className="text-[#E0345F] font-black">€49,00</span> eenmalig · 4K · 20.000+</p>
             </div>
             <a
               href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
@@ -434,7 +326,7 @@ export default function App() {
               className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-7 text-center space-y-4"
             >
               <div className="text-4xl">✋</div>
-              <h3 className="text-xl font-black text-slate-900">Wacht! Je verlaat een besparing van <span className="text-[#ef4444]">€494</span></h3>
+              <h3 className="text-xl font-black text-slate-900">Wacht! Je verlaat een besparing van <span className="text-[#E0345F]">€494</span></h3>
               <p className="text-sm text-slate-500 leading-relaxed">Het 15 maanden pakket bespaart je €494 ten opzichte van maandelijkse aanbieders. Exclusief voor jou: gratis installatiehulp.</p>
               <a
                 href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
@@ -448,26 +340,6 @@ export default function App() {
               </a>
               <button onClick={() => setShowRetention(false)} className="text-xs text-slate-400 hover:text-slate-600 cursor-pointer transition">Nee, ik ga weg</button>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Order toast notifications */}
-      <AnimatePresence>
-        {orderToast && (
-          <motion.div
-            key={orderToast.name + orderToast.city}
-            initial={{ opacity: 0, x: -80, y: 0 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -80 }}
-            transition={{ type: "spring", stiffness: 300, damping: 28 }}
-            className="fixed bottom-24 left-4 z-50 bg-white border border-slate-200 rounded-2xl shadow-2xl px-4 py-3 flex items-center gap-3 max-w-[280px]"
-          >
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-            <div className="min-w-0">
-              <p className="text-xs font-black text-slate-900 truncate">{orderToast.name} uit {orderToast.city}</p>
-              <p className="text-xs text-slate-500">bestelde zojuist het <span className="font-bold text-slate-700">{orderToast.plan}</span></p>
-            </div>
           </motion.div>
         )}
       </AnimatePresence>

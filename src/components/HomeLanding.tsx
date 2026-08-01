@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import React from "react";
 import { MovieOrSeries } from "../types";
 import {
-  Play, Check, Star, ChevronRight, Monitor,
+  Check, Star, ChevronRight, Monitor,
   ChevronDown, ChevronUp, Zap, Shield, Clock, Globe, Package, Lock, ShoppingCart
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
@@ -162,10 +162,12 @@ const POPULAR_SERIES: PopularSeries[] = [
   { title: "Rick and Morty",      year: 2013, genre: "Animatie", rating: 9.1, poster: "https://image.tmdb.org/t/p/w500/owhkU6KRqdXoUQpjV8uyZGPtX58.jpg" },
 ];
 
+// Hero rail: films and series interleaved so both are represented as it scrolls.
+const HERO_POSTERS: { title: string; poster: string }[] = POPULAR_FILMS.flatMap(
+  (film, i) => [film, POPULAR_SERIES[i % POPULAR_SERIES.length]]
+);
+
 export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab }: HomeLandingProps) {
-  const heroMovies = moviesAndSeries.filter(m => m.isTrending).slice(0, 5);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const activeHero = heroMovies[currentSlide] || moviesAndSeries[0];
   const [orderModal, setOrderModal] = useState<{ plan: string; period: string; price: number; vpn: boolean; screens: number } | null>(null);
   const [tickerIdx, setTickerIdx] = useState(0);
   const [countdown, setCountdown] = useState({ h: 0, m: 0, s: 0 });
@@ -180,20 +182,9 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
     const t = setInterval(calc, 1000);
     return () => clearInterval(t);
   }, []);
-  const [geoCity, setGeoCity] = useState<string | null>(null);
-  const [supportCount, setSupportCount] = useState(3);
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizStep, setQuizStep] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState<string[]>([]);
-
-  useEffect(() => {
-    fetch("https://ipapi.co/json/").then(r => r.json()).then(d => { if (d.city) setGeoCity(d.city); }).catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    const t = setInterval(() => setSupportCount(n => Math.max(2, Math.min(5, n + (Math.random() > 0.5 ? 1 : -1)))), 7000);
-    return () => clearInterval(t);
-  }, []);
 
   const QUIZ_STEPS: { q: string; opts: { label: string; icon: React.ReactNode }[] }[] = [
     { q: "Welk apparaat gebruik je?", opts: [
@@ -248,13 +239,6 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
     return () => observers.forEach(o => o?.disconnect());
   }, []);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroMovies.length);
-    }, 7000);
-    return () => clearInterval(timer);
-  }, [heroMovies.length]);
-
   const [pricingDuration, setPricingDuration] = useState<DurationId>("3m");
   const [pricingDevices, setPricingDevices] = useState(1);
   const [openFaqId, setOpenFaqId] = useState<number | null>(0);
@@ -272,7 +256,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
     return () => clearInterval(t);
   }, []);
   const fireConfetti = useCallback(() => {
-    const colors = ["#ef4444", "#25D366", "#3b82f6", "#f59e0b", "#ec4899", "#ffffff"];
+    const colors = ["#E0345F", "#25D366", "#3b82f6", "#f59e0b", "#ec4899", "#ffffff"];
     const count = 80;
     for (let i = 0; i < count; i++) {
       const el = document.createElement("div");
@@ -492,9 +476,203 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
   return (
     <div id="home-landing-screen" className="space-y-10 md:space-y-16">
 
+      {/* 1. HERO — full-bleed crimson stage, films & series on a diagonal rail */}
+      <section className="relative isolate left-1/2 -translate-x-1/2 w-screen overflow-hidden hero-stage flex flex-col -mt-8 min-h-[38rem] sm:min-h-[42rem] lg:min-h-[88vh]">
+
+        {/* Concentric rings radiating from behind the wordmark */}
+        <div className="absolute inset-0 z-0 hero-rings pointer-events-none" aria-hidden />
+
+        {/* Back rail — smaller, softer, tilted with the front rail */}
+        <div className="absolute inset-0 z-0 hidden md:block overflow-hidden" aria-hidden>
+          <div className="absolute inset-x-[-14%] top-[26%] rail-tilt rail-mask poster-rail-back">
+            <div className="rail-track rail-track-right gap-8">
+              {[...HERO_POSTERS, ...HERO_POSTERS].map((p, i) => (
+                <img
+                  key={`hpb-${i}`}
+                  src={p.poster}
+                  alt=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  className="hero-poster h-[13rem] lg:h-[15rem] w-auto rounded-xl shrink-0 select-none"
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Front rail. Luminosity blend lets the gradient tint the artwork, so it
+            reads as the hero's subject rather than a competing image. */}
+        <div className="absolute inset-0 z-0 overflow-hidden" aria-hidden>
+          <div className="absolute inset-x-[-14%] top-1/2 -translate-y-1/2 rail-tilt rail-mask poster-rail">
+            <div className="rail-track rail-track-left gap-4 md:gap-6">
+              {[...HERO_POSTERS, ...HERO_POSTERS].map((p, i) => (
+                <img
+                  key={`hp-${i}`}
+                  src={p.poster}
+                  alt=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  className="hero-poster h-[14rem] sm:h-[18rem] md:h-[23rem] lg:h-[26rem] w-auto rounded-2xl shrink-0 select-none"
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Vignette — darkens the left, corners and base so the copy sits clear */}
+        <div className="absolute inset-0 z-[1] hero-vignette pointer-events-none" aria-hidden />
+        <div className="absolute inset-0 z-[1] hero-spot pointer-events-none" aria-hidden />
+        <div className="absolute inset-0 z-[2] hero-noise pointer-events-none" aria-hidden />
+        <div className="absolute inset-x-0 bottom-0 h-32 z-0 hero-foot pointer-events-none" aria-hidden />
+
+        {/* Edge label */}
+        <div className="hidden lg:flex items-center gap-4 absolute left-6 top-1/2 -translate-y-1/2 z-10 origin-center -rotate-90 pointer-events-none" aria-hidden>
+          <span className="w-10 h-px bg-white/30" />
+          <span className="text-[10px] font-bold tracking-[0.35em] text-white/45 uppercase whitespace-nowrap">
+            goedkopeiptv.com
+          </span>
+        </div>
+
+        {/* Wordmark block */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="relative z-10 flex-1 flex items-center w-full max-w-6xl mx-auto px-5 sm:px-8 md:px-10 lg:pl-20 pt-28 pb-12"
+        >
+          <div className="w-full">
+
+            {/* Eyebrow */}
+            <div className="flex items-center gap-3">
+              <span className="w-8 sm:w-12 h-px bg-[#E0345F]" aria-hidden />
+              <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.32em] text-white/70 uppercase">
+                Nederlandse IPTV
+              </span>
+            </div>
+
+            {/* Display lockup — light wide word over a heavy gradient word */}
+            <h1 className="mt-5 font-sans uppercase leading-[0.82] drop-shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
+              <span className="block font-extralight tracking-[0.14em] text-white/95 text-[9vw] sm:text-[3.25rem] md:text-[4rem] lg:text-[4.5rem]">
+                Goedkope
+              </span>
+              <span className="block font-black tracking-[-0.02em] text-gradient-rose text-[26vw] sm:text-[8.5rem] md:text-[10.5rem] lg:text-[13rem] mt-1">
+                IPTV
+              </span>
+            </h1>
+
+            <p className="mt-6 text-white/75 text-sm sm:text-[15px] leading-relaxed max-w-md">
+              20.000+ zenders. 200.000+ films en series in 4K.
+              Geen contract, geen abonnement — binnen 5 minuten actief.
+            </p>
+
+            {/* CTA row */}
+            <div className="mt-8 flex items-center gap-4 sm:gap-6 flex-wrap">
+              <button
+                onClick={() => {
+                  const msg = "Hallo, ik wil graag meer informatie over goedkopeiptv. Kunt u mij helpen?";
+                  window.open(`https://wa.me/447832486269?text=${encodeURIComponent(msg)}`, "_blank");
+                }}
+                className="group flex items-center gap-3 bg-[#FFFFFF] hover:bg-[#F1F1F3] text-[#1A0A10] text-sm font-black pl-6 pr-1.5 py-1.5 rounded-full shadow-2xl transition duration-200 cursor-pointer active:scale-95"
+              >
+                Bestel via WhatsApp
+                <span className="w-10 h-10 rounded-full bg-[#25D366] flex items-center justify-center shrink-0 transition-transform group-hover:rotate-12">
+                  <svg className="w-[18px] h-[18px] fill-white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.104.549 4.082 1.508 5.799L0 24l6.335-1.482A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.001-1.368l-.36-.214-3.719.870.939-3.619-.236-.374A9.818 9.818 0 1 1 12 21.818z"/></svg>
+                </span>
+              </button>
+
+              <span className="hidden sm:block w-px h-9 bg-white/25" aria-hidden />
+
+              <button
+                onClick={() => { document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" }); }}
+                className="group flex items-center gap-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white text-sm font-semibold pl-6 pr-5 py-3 rounded-full transition cursor-pointer active:scale-95"
+              >
+                Bekijk pakketten
+                <span className="flex items-center gap-1 shrink-0">
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/90 transition-transform group-hover:translate-x-0.5" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/50 transition-transform group-hover:translate-x-0.5" />
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Scroll cue */}
+          <div className="hidden lg:flex flex-col items-center gap-3 absolute right-8 bottom-10" aria-hidden>
+            <span className="text-[10px] font-bold tracking-[0.3em] text-white/45 uppercase [writing-mode:vertical-rl]">
+              Scroll
+            </span>
+            <span className="relative w-px h-14 bg-white/15 overflow-hidden">
+              <span className="absolute inset-0 bg-white/70 scroll-cue-line" />
+            </span>
+          </div>
+        </motion.div>
+
+        {/* Bottom strip */}
+        <div className="relative z-10 bg-white/[0.07] backdrop-blur-sm border-t border-white/15">
+          <div className="w-full max-w-6xl mx-auto px-5 sm:px-8 md:px-10 grid grid-cols-1 md:grid-cols-[auto_1fr_1fr_auto] items-stretch">
+
+            {/* Now playing */}
+            <div className="flex items-center gap-3.5 py-5 md:pr-8 md:border-r border-white/15">
+              <span className="relative w-11 h-11 rounded-full border border-white/35 bg-white/10 flex items-center justify-center shrink-0">
+                <span className="absolute inset-0 rounded-full live-pulse" aria-hidden />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#E0345F]" />
+              </span>
+              <div className="min-w-0">
+                <div className="text-[10px] font-black tracking-[0.22em] text-white/55 uppercase">Nu live</div>
+                <div className="h-5 overflow-hidden flex items-center">
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={heroWordIdx}
+                      initial={{ y: 18, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -18, opacity: 0 }}
+                      transition={{ duration: 0.32, ease: "easeOut" }}
+                      className="block text-sm font-bold text-white whitespace-nowrap"
+                    >
+                      {HERO_WORDS[heroWordIdx]}
+                    </motion.span>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
+
+            {[
+              { n: "01", text: "Alle Nederlandse zenders plus 20.000 internationale kanalen, in 4K Ultra HD zonder buffering." },
+              { n: "02", text: "Eenmalig betalen voor 3, 6 of 15 maanden. Geen automatische verlenging, geen verborgen kosten." },
+            ].map(({ n, text }) => (
+              <div key={n} className="flex items-start gap-3.5 py-5 md:px-8 md:border-r border-white/15 border-t md:border-t-0">
+                <span className="text-[11px] font-black tracking-[0.12em] text-[#FF5C86] shrink-0 mt-px">{n}</span>
+                <p className="text-[11px] leading-snug text-white/70 max-w-[15rem]">{text}</p>
+              </div>
+            ))}
+
+            {/* Live proof */}
+            <div className="flex items-center gap-4 py-5 md:pl-8 border-t md:border-t-0 border-white/15">
+              <div className="flex items-center gap-1.5">
+                <Star className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
+                <span className="text-xs font-black text-white">4.9</span>
+                <span className="text-[11px] text-white/50">/5</span>
+              </div>
+              <span className="w-px h-5 bg-white/20" aria-hidden />
+              <div className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                <span className="text-xs font-bold text-white">{liveViewers.toLocaleString("nl-NL")}</span>
+                <span className="text-[11px] text-white/50">kijkers</span>
+              </div>
+              <button
+                onClick={() => { document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" }); }}
+                className="w-9 h-9 rounded-full bg-white/12 hover:bg-white/25 border border-white/30 flex items-center justify-center shrink-0 transition cursor-pointer"
+                aria-label="Naar de pakketten"
+              >
+                <ChevronRight className="w-4 h-4 text-white" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* LIVE TICKER */}
-      <div className="bg-gradient-to-r from-[#1a1a2e] via-[#16213e] to-[#1a1a2e] rounded-2xl px-4 py-3 flex items-center gap-3 overflow-hidden">
-        <span className="flex items-center gap-1.5 bg-red-600 text-white text-xs font-black px-2.5 py-1 rounded uppercase tracking-wider shrink-0">
+      <div className="bg-gradient-to-r from-[#1A0A10] via-[#2B0F1A] to-[#1A0A10] rounded-2xl px-4 py-3 flex items-center gap-3 overflow-hidden">
+        <span className="flex items-center gap-1.5 bg-rose-600 text-white text-xs font-black px-2.5 py-1 rounded uppercase tracking-wider shrink-0">
           <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse inline-block" />
           LIVE
         </span>
@@ -514,149 +692,14 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
         </div>
       </div>
 
-      {/* 1. HERO SLIDER */}
-      <div className="relative rounded-2xl md:rounded-3xl overflow-hidden w-full shadow-2xl flex items-end" style={{ minHeight: "420px" }} >
-        <div className="absolute inset-0 md:hidden" style={{ paddingBottom: "56.25%" }} />
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentSlide}
-            initial={{ opacity: 0, scale: 1.03 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.9 }}
-            className="absolute inset-0 z-0"
-          >
-            <img
-              src={activeHero?.backdrop}
-              alt={activeHero?.title}
-              className="w-full h-full object-cover filter brightness-[0.3]"
-              referrerPolicy="no-referrer"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-            <div className="absolute inset-y-0 left-0 w-full md:w-2/3 bg-gradient-to-r from-black/90 via-black/40 to-transparent" />
-          </motion.div>
-        </AnimatePresence>
-
-        <div className="relative z-10 p-5 sm:p-8 md:p-12 lg:p-16 w-full md:max-w-2xl space-y-4">
-          {/* Gradient blob */}
-          <div className="absolute -inset-20 pointer-events-none z-0" aria-hidden>
-            <div className="absolute top-1/2 left-1/4 w-64 h-64 rounded-full bg-[#ef4444]/20 blur-3xl" style={{ animation: "pulse-ring 4s ease-in-out infinite" }} />
-            <div className="absolute top-1/3 left-1/3 w-48 h-48 rounded-full bg-red-600/10 blur-3xl" style={{ animation: "pulse-ring 6s ease-in-out infinite reverse" }} />
-          </div>
-
-          <div className="flex items-center gap-2 relative z-10">
-            <span className="text-xs bg-[#ef4444] text-white font-black px-2.5 py-1 rounded-lg uppercase tracking-widest glow-red-sm">
-              🇳🇱 {geoCity ? `Populair in ${geoCity}` : "Trending in Nederland"}
-            </span>
-            <span className="flex items-center gap-1 text-xs text-amber-400 font-bold bg-black/50 px-2 py-1 rounded-lg backdrop-blur-sm">
-              <Star className="w-3 h-3 fill-current" />
-              {activeHero?.rating}
-            </span>
-          </div>
-
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight leading-none drop-shadow-lg whitespace-nowrap overflow-hidden text-ellipsis">
-            {activeHero?.title}
-          </h1>
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-white/70 text-sm font-bold">Kijk nu:</span>
-            <div className="overflow-hidden h-7 flex items-center">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={heroWordIdx}
-                  initial={{ y: 24, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -24, opacity: 0 }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
-                  className="text-sm font-black text-[#ef4444] bg-red-500/20 border border-red-500/30 px-2.5 py-0.5 rounded-lg block"
-                >
-                  {HERO_WORDS[heroWordIdx]}
-                </motion.span>
-              </AnimatePresence>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-0.5">
-              {[...Array(5)].map((_, i) => (
-                <svg key={i} viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-amber-400"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              ))}
-            </div>
-            <span className="text-xs font-bold text-white/80">4.9/5</span>
-            <span className="text-xs text-slate-400">· 1.247 beoordelingen</span>
-            <span className="ml-2 flex items-center gap-1 text-xs text-emerald-400 font-bold bg-black/40 px-2 py-0.5 rounded-full backdrop-blur-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-              {supportCount} medewerkers online
-            </span>
-          </div>
-
-          <p className="text-slate-300 text-xs sm:text-sm leading-relaxed line-clamp-2 max-w-lg">
-            {activeHero?.description}
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
-            <button
-              onClick={() => {
-                const msg = "Hallo, ik wil graag meer informatie over goedkopeiptv. Kunt u mij helpen?";
-                window.open(`https://wa.me/447832486269?text=${encodeURIComponent(msg)}`, "_blank");
-              }}
-              className="w-full sm:w-auto bg-[#25D366] hover:bg-[#20b859] text-white text-sm font-extrabold px-6 py-4 rounded-xl shadow-lg flex items-center justify-center gap-2.5 transition duration-200 active:scale-95 cursor-pointer"
-            >
-              <svg className="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.104.549 4.082 1.508 5.799L0 24l6.335-1.482A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.001-1.368l-.36-.214-3.719.870.939-3.619-.236-.374A9.818 9.818 0 1 1 12 21.818z"/></svg>
-              Contact via WhatsApp
-            </button>
-            <button
-              onClick={() => { document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" }); }}
-              className="w-full sm:w-auto bg-white hover:bg-slate-100 border-2 border-[#ef4444] text-[#ef4444] text-sm font-black px-6 py-4 rounded-xl transition-all cursor-pointer shadow-lg"
-            >
-              Bestel je pakket
-            </button>
-          </div>
-
-          <div className="flex items-center gap-2 pt-1">
-            {heroMovies.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentSlide(idx)}
-                className={`h-1.5 rounded-full transition-all duration-400 cursor-pointer ${
-                  currentSlide === idx ? "w-10 bg-[#ef4444] glow-red-sm" : "w-2 bg-white/25 hover:bg-white/50"
-                }`}
-              />
-            ))}
-            <span className="ml-3 flex items-center gap-1.5 bg-black/50 backdrop-blur-sm border border-white/10 px-3 py-1 rounded-full">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-              <span className="text-xs font-bold text-white">{liveViewers.toLocaleString("nl-NL")} actieve kijkers</span>
-            </span>
-            <button
-              onClick={() => {
-                const msg = encodeURIComponent("🔥 Kijk dit eens! Goedkope IPTV — alle zenders in 4K, Eredivisie & Champions League. Binnen 5 minuten actief 👉 https://goedkopeiptv.com");
-                window.open(`https://wa.me/?text=${msg}`, "_blank");
-              }}
-              className="ml-2 flex items-center gap-1.5 bg-[#25D366]/20 hover:bg-[#25D366]/40 backdrop-blur-sm border border-[#25D366]/40 px-3 py-1 rounded-full transition cursor-pointer"
-            >
-              <svg className="w-3.5 h-3.5 fill-[#25D366] shrink-0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.104.549 4.082 1.508 5.799L0 24l6.335-1.482A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.001-1.368l-.36-.214-3.719.870.939-3.619-.236-.374A9.818 9.818 0 1 1 12 21.818z"/></svg>
-              <span className="text-xs font-bold text-white">Deel</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Film genre tags bottom-right */}
-        <div className="absolute bottom-6 right-6 z-10 hidden md:flex items-center gap-2">
-          {activeHero?.genre?.slice(0, 3).map(g => (
-            <span key={g} className="text-xs bg-white/10 backdrop-blur-sm border border-white/20 text-white px-2.5 py-1 rounded-lg font-semibold">
-              {g}
-            </span>
-          ))}
-        </div>
-      </div>
-
       {/* CHANNELS STRIP */}
       <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="space-y-4">
         <div className="text-center">
-          <span className="text-xs font-black tracking-widest text-[#ef4444] uppercase bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-full inline-block font-roboto-slab">20.000+ Zenders beschikbaar</span>
+          <span className="text-xs font-black tracking-widest text-[#E0345F] uppercase bg-rose-500/10 border border-rose-500/20 px-3 py-1.5 rounded-full inline-block font-roboto-slab">20.000+ Zenders beschikbaar</span>
         </div>
         <div className="relative">
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-24 z-10 bg-gradient-to-r from-[#f8fafc] to-transparent dark:hidden" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-24 z-10 bg-gradient-to-l from-[#f8fafc] to-transparent dark:hidden" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-24 z-10 bg-gradient-to-r from-[#0E0E10] to-transparent dark:hidden" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-24 z-10 bg-gradient-to-l from-[#0E0E10] to-transparent dark:hidden" />
         <div
           ref={channelsScrollRef}
           onMouseEnter={() => { channelsPaused.current = true; }}
@@ -665,14 +708,14 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {[...CHANNELS, ...CHANNELS].map((ch, i) => (
-            <div key={i} className="relative glass-card rounded-xl px-4 pt-5 pb-2.5 flex flex-col items-center flex-shrink-0 hover:shadow-md transition-shadow gap-1">
+            <div key={i} className="relative logo-tile rounded-xl px-4 pt-5 pb-2.5 flex flex-col items-center flex-shrink-0 hover:shadow-md transition-shadow gap-1">
               {ch.isLive && i < CHANNELS.length && (
-                <span className="absolute top-1.5 right-1.5 flex items-center gap-1 bg-red-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-wider leading-tight">
+                <span className="absolute top-1.5 right-1.5 flex items-center gap-1 bg-rose-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-wider leading-tight">
                   <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shrink-0" />NU LIVE
                 </span>
               )}
               {ch.isNew && i < CHANNELS.length && (
-                <span className="absolute top-1.5 right-1.5 bg-red-500 text-white text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider leading-tight">NIEUW</span>
+                <span className="absolute top-1.5 right-1.5 bg-rose-500 text-white text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider leading-tight">NIEUW</span>
               )}
               <img src={ch.img} alt={ch.name} className="h-9 w-auto object-contain" referrerPolicy="no-referrer" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
             </div>
@@ -690,9 +733,9 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
             ? (stat.end % 1 === 0 ? Math.round(count).toLocaleString("nl-NL") : count.toFixed(1)) + (stat.suffix ?? "")
             : stat.value;
           return (
-            <div key={i} ref={statRefs[i]} className="glass-card rounded-2xl p-4 md:p-5 flex items-center gap-3 md:gap-4 group hover:border-[#ef4444]/30 transition-all duration-300">
-              <div className="w-11 h-11 rounded-xl bg-[#ef4444]/10 border border-[#ef4444]/20 flex items-center justify-center shrink-0 group-hover:bg-[#ef4444]/20 transition-colors">
-                <Icon className="w-5 h-5 text-[#ef4444]" />
+            <div key={i} ref={statRefs[i]} className="glass-card rounded-2xl p-4 md:p-5 flex items-center gap-3 md:gap-4 group hover:border-[#E0345F]/30 transition-all duration-300">
+              <div className="w-11 h-11 rounded-xl bg-[#E0345F]/10 border border-[#E0345F]/20 flex items-center justify-center shrink-0 group-hover:bg-[#E0345F]/20 transition-colors">
+                <Icon className="w-5 h-5 text-[#E0345F]" />
               </div>
               <div>
                 <div className="font-black text-xl md:text-2xl text-slate-900 leading-none tabular-nums" style={{ fontVariantNumeric: "tabular-nums" }}>{display}</div>
@@ -703,13 +746,13 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
         })}
       </motion.div>
 
-      <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#ef4444]/30 to-transparent" /></div>
+      <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#E0345F]/30 to-transparent" /></div>
 
       {/* 3. TRENDING DUTCH FILMS */}
       <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="space-y-6">
         <div className="flex items-end justify-between">
           <div className="space-y-1">
-            <span className="text-xs font-black uppercase tracking-widest text-[#ef4444] font-roboto-slab">🇳🇱 Trending Nu</span>
+            <span className="text-xs font-black uppercase tracking-widest text-[#E0345F] font-roboto-slab">🇳🇱 Trending Nu</span>
             <h2 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">
               Nederlandse Films & Series
             </h2>
@@ -743,7 +786,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                   {movie.rating}
                 </div>
                 {movie.isTrending && (
-                  <div className="absolute top-2.5 right-2.5 bg-[#ef4444] text-white text-[9px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-wider">
+                  <div className="absolute top-2.5 right-2.5 bg-[#E0345F] text-white text-[9px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-wider">
                     Hot
                   </div>
                 )}
@@ -752,7 +795,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                 </div>
               </div>
               <div>
-                <h4 className="font-bold text-xs text-slate-900 truncate group-hover:text-[#ef4444] transition leading-tight">
+                <h4 className="font-bold text-xs text-slate-900 truncate group-hover:text-[#E0345F] transition leading-tight">
                   {movie.title}
                 </h4>
                 <p className="text-xs text-slate-500 font-medium">{movie.year} · {movie.genre[0]}</p>
@@ -766,7 +809,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
       <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="space-y-6">
         <div className="flex items-end justify-between">
           <div className="space-y-1">
-            <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-[#ef4444] font-roboto-slab"><Globe className="w-3.5 h-3.5" strokeWidth={2.5} />Wereldwijd Trending</span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-[#E0345F] font-roboto-slab"><Globe className="w-3.5 h-3.5" strokeWidth={2.5} />Wereldwijd Trending</span>
             <h2 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">
               Meest Populaire Films
             </h2>
@@ -800,7 +843,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                   <Star className="w-2.5 h-2.5 fill-amber-400" />
                   {film.rating}
                 </div>
-                <div className="absolute top-2.5 right-2.5 bg-[#ef4444] text-white text-[9px] font-black w-5 h-5 flex items-center justify-center rounded-md tabular-nums">
+                <div className="absolute top-2.5 right-2.5 bg-[#E0345F] text-white text-[9px] font-black w-5 h-5 flex items-center justify-center rounded-md tabular-nums">
                   {(i % POPULAR_FILMS.length) + 1}
                 </div>
                 <div className="absolute bottom-0 inset-x-0 p-3 opacity-0 group-hover:opacity-100 transition">
@@ -808,7 +851,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                 </div>
               </div>
               <div>
-                <h4 className="font-bold text-xs text-slate-900 truncate group-hover:text-[#ef4444] transition leading-tight">
+                <h4 className="font-bold text-xs text-slate-900 truncate group-hover:text-[#E0345F] transition leading-tight">
                   {film.title}
                 </h4>
                 <p className="text-xs text-slate-500 font-medium">{film.year} · {film.genre}</p>
@@ -822,7 +865,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
       <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="space-y-6">
         <div className="flex items-end justify-between">
           <div className="space-y-1">
-            <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-[#ef4444] font-roboto-slab"><Monitor className="w-3.5 h-3.5" strokeWidth={2.5} />Series Trending</span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-[#E0345F] font-roboto-slab"><Monitor className="w-3.5 h-3.5" strokeWidth={2.5} />Series Trending</span>
             <h2 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">
               Meest Populaire Series
             </h2>
@@ -856,7 +899,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                   <Star className="w-2.5 h-2.5 fill-amber-400" />
                   {serie.rating}
                 </div>
-                <div className="absolute top-2.5 right-2.5 bg-[#ef4444] text-white text-[9px] font-black w-5 h-5 flex items-center justify-center rounded-md tabular-nums">
+                <div className="absolute top-2.5 right-2.5 bg-[#E0345F] text-white text-[9px] font-black w-5 h-5 flex items-center justify-center rounded-md tabular-nums">
                   {(i % POPULAR_SERIES.length) + 1}
                 </div>
                 <div className="absolute bottom-0 inset-x-0 p-3 opacity-0 group-hover:opacity-100 transition">
@@ -864,7 +907,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                 </div>
               </div>
               <div>
-                <h4 className="font-bold text-xs text-slate-900 truncate group-hover:text-[#ef4444] transition leading-tight">
+                <h4 className="font-bold text-xs text-slate-900 truncate group-hover:text-[#E0345F] transition leading-tight">
                   {serie.title}
                 </h4>
                 <p className="text-xs text-slate-500 font-medium">{serie.year} · {serie.genre}</p>
@@ -877,7 +920,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
       {/* SPORT SECTION */}
       <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="space-y-10">
         <div className="text-center space-y-3">
-          <span className="text-xs font-black tracking-[0.25em] text-[#ef4444] uppercase bg-red-500/10 border border-red-500/20 px-3 py-1 rounded-full inline-block font-roboto-slab">Van Eredivisie tot Champions League</span>
+          <span className="text-xs font-black tracking-[0.25em] text-[#E0345F] uppercase bg-rose-500/10 border border-rose-500/20 px-3 py-1 rounded-full inline-block font-roboto-slab">Van Eredivisie tot Champions League</span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight uppercase leading-tight">
             Elke Sport. Elke Competitie. Live in 4K.
           </h2>
@@ -909,7 +952,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
               <div className="relative h-full flex flex-col justify-between p-4">
                 {/* badges */}
                 <div className="flex items-center gap-2">
-                  <span className="flex items-center gap-1 bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-wider">
+                  <span className="flex items-center gap-1 bg-rose-600 text-white text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-wider">
                     <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse inline-block" />
                     LIVE
                   </span>
@@ -918,7 +961,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
 
                 {/* bottom label */}
                 <div>
-                  <div className="text-[#ef4444] font-black text-sm md:text-base uppercase tracking-widest leading-tight drop-shadow-lg">
+                  <div className="text-[#E0345F] font-black text-sm md:text-base uppercase tracking-widest leading-tight drop-shadow-lg">
                     {sport.name}
                   </div>
                   <div className="text-white/60 text-xs mt-0.5 leading-tight truncate">{sport.sub}</div>
@@ -929,15 +972,15 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
         </div>
       </motion.div>
 
-      <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#ef4444]/30 to-transparent" /></div>
+      <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#E0345F]/30 to-transparent" /></div>
 
       {/* 4. PRICING — WhatsApp order, 3 fixed plans */}
       <motion.div ref={pricingRef} id="pricing" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="space-y-8">
         <div className="text-center max-w-xl mx-auto space-y-3">
-          <span className="inline-flex items-center gap-2 text-xs text-[#ef4444] font-extrabold uppercase tracking-widest bg-red-500/10 px-4 py-1.5 rounded-full border border-red-500/15 font-roboto-slab">
+          <span className="inline-flex items-center gap-2 text-xs text-[#E0345F] font-extrabold uppercase tracking-widest bg-rose-500/10 px-4 py-1.5 rounded-full border border-rose-500/15 font-roboto-slab">
             🇳🇱 Abonnementen
           </span>
-          <div className="inline-flex flex-wrap items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-500 text-white text-xs font-black px-4 py-2 rounded-xl shadow-lg">
+          <div className="inline-flex flex-wrap items-center justify-center gap-2 bg-gradient-to-r from-rose-600 to-rose-500 text-white text-xs font-black px-4 py-2 rounded-xl shadow-lg">
             <span className="animate-pulse">🔥</span>
             <span>Aanbieding verloopt over</span>
             <span className="font-mono bg-black/20 px-2 py-0.5 rounded">
@@ -964,7 +1007,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                     whileInView={{ scaleX: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: 0.6 }}
-                    className="absolute inset-y-[45%] left-0 right-0 h-0.5 bg-red-400 origin-left"
+                    className="absolute inset-y-[45%] left-0 right-0 h-0.5 bg-rose-400 origin-left"
                   />
                 </span>
               </span>
@@ -985,7 +1028,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
           </p>
           <button
             onClick={() => { setShowQuiz(true); setQuizStep(0); setQuizAnswers([]); }}
-            className="inline-flex items-center gap-2 text-sm font-black text-[#ef4444] border border-[#ef4444]/30 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-full transition cursor-pointer"
+            className="inline-flex items-center gap-2 text-sm font-black text-[#E0345F] border border-[#E0345F]/30 bg-rose-50 hover:bg-rose-100 px-4 py-2 rounded-full transition cursor-pointer"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor"/></svg>
             Welk pakket past bij jou? — Doe de quiz
@@ -993,7 +1036,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
           {/* Social proof counter */}
           <div className="flex items-center justify-center gap-4 pt-1">
             <div className="flex -space-x-2">
-              {["bg-red-400","bg-blue-500","bg-emerald-500","bg-red-500","bg-rose-500"].map((c,i) => (
+              {["bg-rose-400","bg-blue-500","bg-emerald-500","bg-rose-500","bg-rose-500"].map((c,i) => (
                 <div key={i} className={`w-7 h-7 rounded-full ${c} border-2 border-white flex items-center justify-center text-white text-[9px] font-black`}>
                   {["J","M","S","K","R"][i]}
                 </div>
@@ -1019,7 +1062,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                   key={d.id}
                   onClick={() => setPricingDuration(d.id)}
                   className={`relative flex-1 rounded-xl py-3 px-2 text-center transition-all cursor-pointer ${
-                    active ? "bg-gradient-to-r from-[#ef4444] to-red-500 text-white shadow-lg" : "text-slate-400 hover:text-white"
+                    active ? "bg-gradient-to-r from-[#E0345F] to-rose-500 text-white shadow-lg" : "text-slate-400 hover:text-white"
                   }`}
                 >
                   {d.discount && (
@@ -1027,7 +1070,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                   )}
                   <div className="text-sm font-black leading-tight">{d.label}</div>
                   {d.tag && (
-                    <div className={`text-[10px] font-black tracking-wide mt-0.5 ${active ? "text-white" : "text-[#ef4444]"}`}>{d.tag}</div>
+                    <div className={`text-[10px] font-black tracking-wide mt-0.5 ${active ? "text-white" : "text-[#E0345F]"}`}>{d.tag}</div>
                   )}
                 </button>
               );
@@ -1045,7 +1088,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                   key={n}
                   onClick={() => setPricingDevices(n)}
                   className={`flex-1 rounded-xl py-2.5 px-1 flex items-center justify-center gap-1.5 text-xs sm:text-sm font-black transition-all cursor-pointer ${
-                    active ? "bg-gradient-to-r from-[#ef4444] to-red-500 text-white shadow" : "text-slate-400 hover:text-white"
+                    active ? "bg-gradient-to-r from-[#E0345F] to-rose-500 text-white shadow" : "text-slate-400 hover:text-white"
                   }`}
                 >
                   <Monitor className="w-4 h-4 shrink-0" />
@@ -1066,15 +1109,15 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
             return (
               <div
                 key={pkg.id}
-                className={`relative rounded-3xl p-6 md:p-8 flex flex-col h-full transition-all duration-300 border bg-gradient-to-b from-[#1a1a2e] to-[#16213e] ${
+                className={`relative rounded-3xl p-6 md:p-8 flex flex-col h-full transition-all duration-300 border bg-gradient-to-b from-[#1A0A10] to-[#2B0F1A] ${
                   premium
-                    ? "border-[#ef4444]/40 shadow-2xl shadow-red-900/30 glow-red"
-                    : "border-orange-500/40 shadow-xl shadow-orange-900/20"
+                    ? "border-[#E0345F]/40 shadow-2xl shadow-rose-900/30 glow-red"
+                    : "border-rose-500/40 shadow-xl shadow-rose-900/20"
                 }`}
               >
                 {isBestDeal && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                    <span className={`text-white text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg ${premium ? "bg-gradient-to-r from-[#ef4444] to-red-500" : "bg-gradient-to-r from-orange-500 to-orange-400"}`}>
+                    <span className={`text-white text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg ${premium ? "bg-gradient-to-r from-[#E0345F] to-rose-500" : "bg-gradient-to-r from-rose-500 to-rose-400"}`}>
                       Beste Deal
                     </span>
                   </div>
@@ -1084,14 +1127,14 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                   <div className="space-y-3">
                     <span
                       className={`inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full text-white ${
-                        premium ? "bg-gradient-to-r from-[#ef4444] to-red-500" : "bg-gradient-to-r from-orange-500 to-orange-400"
+                        premium ? "bg-gradient-to-r from-[#E0345F] to-rose-500" : "bg-gradient-to-r from-rose-500 to-rose-400"
                       }`}
                     >
                       {premium && <Star className="w-3 h-3 fill-white" />}
                       {pkg.badge}
                     </span>
                     <div>
-                      <div className={`text-xs font-black uppercase tracking-widest mb-1 ${premium ? "text-red-400/80" : "text-orange-400/80"}`}>
+                      <div className={`text-xs font-black uppercase tracking-widest mb-1 ${premium ? "text-rose-400/80" : "text-rose-400/80"}`}>
                         {durationMeta.short}
                       </div>
                       <h3 className="text-2xl font-black tracking-tight text-white">{pkg.name}</h3>
@@ -1099,7 +1142,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                   </div>
 
                   <div>
-                    <div className={`text-5xl font-black tracking-tight ${premium ? "text-red-400" : "text-orange-400"}`}>
+                    <div className={`text-5xl font-black tracking-tight ${premium ? "text-rose-400" : "text-rose-400"}`}>
                       €{price.toFixed(2).replace(".", ",")}
                     </div>
                     <div className="flex items-center gap-1.5 mt-2 text-slate-400 text-sm">
@@ -1108,12 +1151,12 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                     </div>
                   </div>
 
-                  <div className={`border-t pt-5 ${premium ? "border-[#ef4444]/15" : "border-orange-500/15"}`}>
+                  <div className={`border-t pt-5 ${premium ? "border-[#E0345F]/15" : "border-rose-500/15"}`}>
                     <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">Wat is inbegrepen</div>
                     <ul className="space-y-2.5">
                       {pkg.features.map((feat) => (
                         <li key={feat} className="flex items-start gap-2.5 text-sm text-slate-200">
-                          <span className={`shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center ${premium ? "bg-[#ef4444]" : "bg-orange-500"}`}>
+                          <span className={`shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center ${premium ? "bg-[#E0345F]" : "bg-rose-500"}`}>
                             <Check className="w-2.5 h-2.5 text-white" strokeWidth={4} />
                           </span>
                           {feat}
@@ -1127,8 +1170,8 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                   onClick={() => { fireConfetti(); setOrderModal({ plan: pkg.name, period: durationMeta.label, price, vpn: true, screens: pricingDevices }); }}
                   className={`mt-6 w-full font-black text-sm py-4 rounded-2xl transition-all duration-200 active:scale-95 cursor-pointer text-white hover:brightness-110 ${
                     premium
-                      ? "bg-gradient-to-r from-[#ef4444] to-red-500 shadow-lg shadow-red-900/30"
-                      : "bg-gradient-to-r from-orange-500 to-orange-400 shadow-lg shadow-orange-900/30"
+                      ? "bg-gradient-to-r from-[#E0345F] to-rose-500 shadow-lg shadow-rose-900/30"
+                      : "bg-gradient-to-r from-rose-500 to-rose-400 shadow-lg shadow-rose-900/30"
                   }`}
                 >
                   {pkg.cta}
@@ -1141,34 +1184,34 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
         {/* Trust badges */}
         <div className="flex items-center justify-center gap-4 flex-wrap text-xs text-slate-500 pt-2">
           {/* PayPal */}
-          <span className="flex items-center bg-white border border-slate-200 px-4 py-2.5 rounded-xl shadow-sm">
+          <span className="flex items-center logo-tile px-4 py-2.5 rounded-xl shadow-sm">
             <svg viewBox="0 0 24 24" className="h-6 w-auto" xmlns="http://www.w3.org/2000/svg"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 0 0 .554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.816-5.09a.932.932 0 0 1 .923-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.777-4.471z" fill="#009cde"/><path d="M6.635 6.891a.956.956 0 0 1 .944-.806h6.038a12.3 12.3 0 0 1 1.944.148 8.014 8.014 0 0 1 1.184.323c.29.104.557.23.806.38.232-1.481-.002-2.488-.8-3.399C15.836.982 14.05.5 11.772.5H4.31c-.524 0-.97.382-1.051.9L.622 20.8a.636.636 0 0 0 .628.74H5.13l1.505-9.592v-.029l-.001.029z" fill="#003087"/></svg>
           </span>
           {/* Visa */}
-          <span className="flex items-center bg-white border border-slate-200 px-4 py-2.5 rounded-xl shadow-sm">
+          <span className="flex items-center logo-tile px-4 py-2.5 rounded-xl shadow-sm">
             <svg viewBox="0 0 48 16" className="h-5 w-auto" xmlns="http://www.w3.org/2000/svg"><path d="M18.09.9L11.7 15.1H7.7L4.57 3.96C4.38 3.2 4.21 2.93 3.62 2.6 2.65 2.07 1.05 1.58 0 1.28L.09.9h6.48c.83 0 1.57.55 1.76 1.5l1.61 8.56L13.97.9h4.12zm16.28 9.44c.02-4-5.53-4.22-5.49-6 .01-.54.53-1.12 1.66-1.27.56-.07 2.1-.13 3.85.67l.69-3.2A10.47 10.47 0 0 0 31.42 0c-3.88 0-6.61 2.06-6.63 5.01-.03 2.18 1.95 3.4 3.43 4.12 1.53.74 2.04 1.22 2.04 1.88-.01 1.01-1.22 1.46-2.35 1.48-1.97.03-3.12-.53-4.03-.96l-.71 3.33c.92.42 2.61.79 4.36.8 4.12 0 6.81-2.03 6.83-5.22zm10.23 4.76H48L44.9.9h-3.22c-.72 0-1.33.42-1.6 1.07L34.4 15.1h4.11l.82-2.26h5.02l.47 2.26zM40.5 9.64l2.06-5.68 1.19 5.68H40.5zM23.56.9L20.37 15.1h-3.92L19.63.9h3.93z" fill="#1a1f71"/></svg>
           </span>
           {/* Bitcoin */}
-          <span className="flex items-center bg-white border border-slate-200 px-4 py-2.5 rounded-xl shadow-sm">
+          <span className="flex items-center logo-tile px-4 py-2.5 rounded-xl shadow-sm">
             <svg viewBox="0 0 24 24" className="h-6 w-6" xmlns="http://www.w3.org/2000/svg"><path d="M23.638 14.904c-1.602 6.43-8.113 10.34-14.542 8.736C2.67 22.05-1.244 15.525.362 9.105 1.962 2.67 8.475-1.243 14.9.358c6.43 1.605 10.342 8.115 8.738 14.548v-.002zm-6.35-4.613c.24-1.59-.974-2.45-2.64-3.03l.54-2.153-1.315-.33-.525 2.107c-.345-.087-.705-.167-1.064-.25l.526-2.127-1.32-.33-.54 2.165c-.285-.067-.565-.132-.84-.2l-1.815-.45-.35 1.407s.975.225.955.236c.535.136.63.486.615.766l-1.477 5.92c-.075.166-.24.406-.614.314.015.02-.96-.24-.96-.24l-.66 1.51 1.71.426.93.242-.54 2.19 1.32.327.54-2.17c.36.1.705.19 1.05.273l-.51 2.154 1.32.33.545-2.19c2.24.427 3.93.257 4.64-1.774.57-1.637-.03-2.58-1.217-3.196.854-.193 1.5-.76 1.655-1.915l.003-.024zm-2.97 4.165c-.404 1.64-3.157.75-4.05.53l.72-2.9c.896.23 3.757.67 3.33 2.37zm.41-4.24c-.37 1.49-2.662.735-3.405.55l.654-2.64c.744.18 3.137.524 2.75 2.084v.006z" fill="#f7931a"/></svg>
           </span>
           {/* SSL */}
-          <span className="flex items-center bg-white border border-slate-200 px-4 py-2.5 rounded-xl shadow-sm">
+          <span className="flex items-center logo-tile px-4 py-2.5 rounded-xl shadow-sm">
             <svg viewBox="0 0 24 24" className="h-6 w-6 text-emerald-500" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </span>
           {/* Binnen 5 min actief */}
-          <span className="flex items-center bg-white border border-slate-200 px-4 py-2.5 rounded-xl shadow-sm">
-            <svg viewBox="0 0 24 24" className="h-6 w-6 text-[#ef4444]" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <span className="flex items-center logo-tile px-4 py-2.5 rounded-xl shadow-sm">
+            <svg viewBox="0 0 24 24" className="h-6 w-6 text-[#E0345F]" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
           </span>
         </div>
       </motion.div>
 
-      <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#ef4444]/30 to-transparent" /></div>
+      <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#E0345F]/30 to-transparent" /></div>
 
       {/* 5. TESTIMONIALS */}
       <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="space-y-8">
         <div className="text-center max-w-xl mx-auto space-y-2">
-          <span className="text-xs text-[#ef4444] font-extrabold uppercase tracking-widest bg-red-500/10 px-3 py-1 rounded-full border border-red-500/10 font-roboto-slab">
+          <span className="text-xs text-[#E0345F] font-extrabold uppercase tracking-widest bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/10 font-roboto-slab">
             Klantreviews
           </span>
           <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
@@ -1181,13 +1224,13 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
           </div>
         </div>
         {/* Klant van de maand */}
-        <div className="bg-gradient-to-r from-[#0d1117] to-[#1a1a2e] rounded-2xl p-5 md:p-6 flex flex-col sm:flex-row gap-4 items-start border border-[#ef4444]/20">
+        <div className="bg-gradient-to-r from-[#0E0E10] to-[#1A0A10] rounded-2xl p-5 md:p-6 flex flex-col sm:flex-row gap-4 items-start border border-[#E0345F]/20">
           <div className="shrink-0 flex flex-col items-center gap-2">
             <div className="relative">
-              <img src="https://i.pravatar.cc/80?img=33" alt="" className="w-16 h-16 rounded-full border-2 border-[#ef4444] object-cover" />
-              <span className="absolute -bottom-1 -right-1 bg-[#ef4444] text-white text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase">⭐ MVP</span>
+              <img src="https://i.pravatar.cc/80?img=33" alt="" className="w-16 h-16 rounded-full border-2 border-[#E0345F] object-cover" />
+              <span className="absolute -bottom-1 -right-1 bg-[#E0345F] text-white text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase">⭐ MVP</span>
             </div>
-            <span className="text-[10px] font-black text-[#ef4444] uppercase tracking-widest whitespace-nowrap">Klant v/d Maand</span>
+            <span className="text-[10px] font-black text-[#E0345F] uppercase tracking-widest whitespace-nowrap">Klant v/d Maand</span>
           </div>
           <div className="space-y-2 flex-1">
             <div className="flex items-center gap-1">
@@ -1212,7 +1255,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
               name: "Daan Visser",
               location: "Amsterdam",
               avatar: "D",
-              color: "bg-red-500",
+              color: "bg-rose-500",
               rating: 5,
               text: "Binnen 3 minuten alles ingesteld op mijn Samsung TV. Beeld is scherp, geen enkele buffer. Eredivisie in 4K — absoluut de beste keuze.",
               plan: "6 Maanden pakket",
@@ -1239,7 +1282,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
               name: "Lotte Bakker",
               location: "Utrecht",
               avatar: "L",
-              color: "bg-red-500",
+              color: "bg-rose-500",
               rating: 5,
               text: "Werkt perfect op mijn Firestick en telefoon tegelijk. Alle Nederlandse zenders, sport én Netflix-kwaliteit films — alles in één app. Aanrader!",
               plan: "6 Maanden pakket",
@@ -1288,7 +1331,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                 style={{ zIndex: 8 - i }}
               />
             ))}
-            <div className="w-9 h-9 rounded-full border-2 border-white bg-[#ef4444] flex items-center justify-center text-white text-[10px] font-black shadow-sm" style={{ zIndex: 0 }}>
+            <div className="w-9 h-9 rounded-full border-2 border-white bg-[#E0345F] flex items-center justify-center text-white text-[10px] font-black shadow-sm" style={{ zIndex: 0 }}>
               +4K
             </div>
           </div>
@@ -1304,20 +1347,20 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
         </div>
       </motion.div>
 
-      <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#ef4444]/30 to-transparent" /></div>
+      <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#E0345F]/30 to-transparent" /></div>
 
       {/* COMPARISON TABLE */}
       <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="space-y-6">
         <div className="text-center space-y-2">
-          <span className="text-xs font-black tracking-[0.25em] text-[#ef4444] uppercase bg-red-500/10 border border-red-500/20 px-3 py-1 rounded-full inline-block font-roboto-slab">Waarom goedkopeiptv?</span>
+          <span className="text-xs font-black tracking-[0.25em] text-[#E0345F] uppercase bg-rose-500/10 border border-rose-500/20 px-3 py-1 rounded-full inline-block font-roboto-slab">Waarom goedkopeiptv?</span>
           <h2 className="text-xl md:text-3xl font-black text-slate-900 tracking-tight">Wij vs. de rest</h2>
         </div>
         <div className="max-w-3xl mx-auto overflow-x-auto rounded-2xl border border-slate-200 shadow-lg">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-gradient-to-r from-[#1a1a2e] to-[#16213e] text-white">
+              <tr className="bg-gradient-to-r from-[#1A0A10] to-[#2B0F1A] text-white">
                 <th className="text-left px-3 sm:px-5 py-3 sm:py-4 font-black text-xs sm:text-sm">Functie</th>
-                <th className="px-2 sm:px-5 py-3 sm:py-4 font-black text-[#ef4444] text-xs sm:text-sm">goedkopeiptv</th>
+                <th className="px-2 sm:px-5 py-3 sm:py-4 font-black text-[#E0345F] text-xs sm:text-sm">goedkopeiptv</th>
                 <th className="px-2 sm:px-5 py-3 sm:py-4 font-bold text-slate-400 text-xs sm:text-sm">Ziggo</th>
                 <th className="px-2 sm:px-5 py-3 sm:py-4 font-bold text-slate-400 text-xs sm:text-sm">KPN</th>
               </tr>
@@ -1345,7 +1388,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
         </div>
       </motion.div>
 
-      <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#ef4444]/30 to-transparent" /></div>
+      <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#E0345F]/30 to-transparent" /></div>
 
       {/* MINI ORDER MAP */}
       <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="glass-card rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-10">
@@ -1363,8 +1406,8 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
               { x: 62, y: 90,  city: "Tilburg",     delay: "0.9s" },
             ].map(({ x, y, city, delay }) => (
               <g key={city}>
-                <circle cx={x} cy={y} r="6" fill="#ef4444" opacity="0.15" style={{ animation: `pulse-ring 2s ${delay} infinite` }} />
-                <circle cx={x} cy={y} r="3" fill="#ef4444" />
+                <circle cx={x} cy={y} r="6" fill="#E0345F" opacity="0.15" style={{ animation: `pulse-ring 2s ${delay} infinite` }} />
+                <circle cx={x} cy={y} r="3" fill="#E0345F" />
               </g>
             ))}
           </svg>
@@ -1378,7 +1421,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
           <p className="text-sm text-slate-500 leading-relaxed font-roboto-slab">Elke minuut worden er nieuwe pakketten besteld. Van Groningen tot Maastricht — goedkopeiptv is de #1 keuze.</p>
           <div className="flex flex-wrap gap-2 justify-center md:justify-start">
             {["Amsterdam", "Rotterdam", "Utrecht", "Eindhoven", "Groningen"].map(c => (
-              <span key={c} className="text-xs bg-red-50 text-[#ef4444] border border-red-200 font-bold px-2.5 py-1 rounded-lg">{c}</span>
+              <span key={c} className="text-xs bg-rose-50 text-[#E0345F] border border-rose-200 font-bold px-2.5 py-1 rounded-lg">{c}</span>
             ))}
           </div>
         </div>
@@ -1387,7 +1430,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
       {/* HOE HET WERKT */}
       <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="space-y-8">
         <div className="text-center space-y-2">
-          <span className="text-xs font-black tracking-widest text-[#ef4444] uppercase bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-full inline-block font-roboto-slab">
+          <span className="text-xs font-black tracking-widest text-[#E0345F] uppercase bg-rose-500/10 border border-rose-500/20 px-3 py-1.5 rounded-full inline-block font-roboto-slab">
             In 3 stappen live
           </span>
           <h2 className="text-xl md:text-3xl font-black text-slate-900 tracking-tight">Hoe het werkt</h2>
@@ -1400,7 +1443,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
               viewport={{ once: true }}
               transition={{ duration: 1, ease: "easeInOut", delay: 0.3 }}
               className="origin-left h-full"
-              style={{ background: "repeating-linear-gradient(90deg,#ef4444 0,#ef4444 8px,transparent 8px,transparent 16px)" }}
+              style={{ background: "repeating-linear-gradient(90deg,#E0345F 0,#E0345F 8px,transparent 8px,transparent 16px)" }}
             />
           </div>
           <div className="grid md:grid-cols-3 gap-6">
@@ -1420,8 +1463,8 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
               className="glass-card rounded-2xl p-5 md:p-6 flex flex-col items-center text-center gap-3 relative z-10"
             >
               <span className="absolute top-4 right-4 text-xs font-black text-slate-300 tracking-widest">{item.step}</span>
-              <div className="w-14 h-14 rounded-2xl bg-[#ef4444]/10 border border-[#ef4444]/20 flex items-center justify-center ring-4 ring-white">
-                <Icon className="w-6 h-6 text-[#ef4444]" />
+              <div className="w-14 h-14 rounded-2xl bg-[#E0345F]/10 border border-[#E0345F]/20 flex items-center justify-center ring-4 ring-white">
+                <Icon className="w-6 h-6 text-[#E0345F]" />
               </div>
               <div>
                 <div className="font-black text-slate-900 text-base mb-1">{item.title}</div>
@@ -1434,12 +1477,12 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
         </div>
       </motion.div>
 
-      <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#ef4444]/30 to-transparent" /></div>
+      <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#E0345F]/30 to-transparent" /></div>
 
       {/* WHATSAPP CHAT PREVIEW */}
       <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="space-y-8">
         <div className="text-center space-y-2">
-          <span className="text-xs font-black tracking-widest text-[#ef4444] uppercase bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-full inline-block font-roboto-slab">
+          <span className="text-xs font-black tracking-widest text-[#E0345F] uppercase bg-rose-500/10 border border-rose-500/20 px-3 py-1.5 rounded-full inline-block font-roboto-slab">
             Zo makkelijk is het
           </span>
           <h2 className="text-xl md:text-3xl font-black text-slate-900 tracking-tight">Bestel in 1 WhatsApp bericht</h2>
@@ -1515,12 +1558,12 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
         </div>
       </motion.div>
 
-      <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#ef4444]/30 to-transparent" /></div>
+      <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#E0345F]/30 to-transparent" /></div>
 
       {/* 6. FAQ */}
       <div className="space-y-8">
         <div className="text-center max-w-xl mx-auto space-y-2">
-          <span className="text-xs text-[#ef4444] font-extrabold uppercase tracking-widest bg-red-500/10 px-3 py-1 rounded-full border border-red-500/10 font-roboto-slab">
+          <span className="text-xs text-[#E0345F] font-extrabold uppercase tracking-widest bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/10 font-roboto-slab">
             Veelgestelde Vragen
           </span>
           <h2 className="text-xl md:text-3xl font-black text-slate-900 tracking-tight">
@@ -1537,7 +1580,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
               value={faqSearch}
               onChange={e => { setFaqSearch(e.target.value); setOpenFaqId(null); }}
               placeholder="Zoek een vraag…"
-              className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-200 bg-white shadow-sm text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ef4444]/40 focus:border-[#ef4444]"
+              className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-200 bg-white shadow-sm text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#E0345F]/40 focus:border-[#E0345F]"
             />
             {faqSearch && (
               <button onClick={() => setFaqSearch("")} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer">
@@ -1563,7 +1606,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                     {faq.question}
                   </span>
                   {isOpen
-                    ? <ChevronUp className="w-5 h-5 text-[#ef4444] shrink-0" />
+                    ? <ChevronUp className="w-5 h-5 text-[#E0345F] shrink-0" />
                     : <ChevronDown className="w-5 h-5 text-slate-400 shrink-0" />
                   }
                 </button>
@@ -1611,15 +1654,15 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
             <defs>
               <path id="sealCircle" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
             </defs>
-            <circle cx="60" cy="60" r="54" fill="none" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="4 3" opacity="0.6" />
-            <circle cx="60" cy="60" r="44" fill="none" stroke="#ef4444" strokeWidth="0.8" opacity="0.3" />
-            <text fontSize="9.5" fontWeight="900" fill="#ef4444" letterSpacing="2.2" fontFamily="Outfit, sans-serif">
+            <circle cx="60" cy="60" r="54" fill="none" stroke="#E0345F" strokeWidth="1.5" strokeDasharray="4 3" opacity="0.6" />
+            <circle cx="60" cy="60" r="44" fill="none" stroke="#E0345F" strokeWidth="0.8" opacity="0.3" />
+            <text fontSize="9.5" fontWeight="900" fill="#E0345F" letterSpacing="2.2" fontFamily="Outfit, sans-serif">
               <textPath href="#sealCircle">100% TEVREDENHEID · IPTVKIJKEN ·</textPath>
             </text>
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#ef4444]/10 border border-[#ef4444]/40 flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#E0345F]/10 border border-[#E0345F]/40 flex items-center justify-center">
+              <svg viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="#E0345F" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
             </div>
@@ -1666,7 +1709,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
       </div>
 
       {/* 7. FOOTER */}
-      <footer className="-mx-3 sm:-mx-4 md:-mx-8 lg:-mx-10 bg-[#0d1117] px-3 sm:px-4 md:px-8 lg:px-10 pt-14 pb-28 md:pb-8 space-y-10 mt-8">
+      <footer className="-mx-3 sm:-mx-4 md:-mx-8 lg:-mx-10 bg-[#0E0E10] px-3 sm:px-4 md:px-8 lg:px-10 pt-14 pb-28 md:pb-8 space-y-10 mt-8">
         {/* Top row */}
         <div className="grid md:grid-cols-3 gap-10">
           {/* Brand */}
@@ -1702,9 +1745,9 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                 <li key={item.label}>
                   <button
                     onClick={() => item.tab ? (onSelectTab(item.tab), window.scrollTo({ top: 0, behavior: "smooth" })) : window.open(`https://wa.me/447832486269?text=${encodeURIComponent("Hallo, ik heb een vraag over goedkopeiptv. Kunt u mij helpen?")}`, "_blank")}
-                    className="text-sm text-slate-400 hover:text-[#ef4444] transition flex items-center gap-2 group"
+                    className="text-sm text-slate-400 hover:text-[#E0345F] transition flex items-center gap-2 group"
                   >
-                    <span className="w-1 h-1 rounded-full bg-[#ef4444]/40 group-hover:bg-[#ef4444] transition" />
+                    <span className="w-1 h-1 rounded-full bg-[#E0345F]/40 group-hover:bg-[#E0345F] transition" />
                     {item.label}
                   </button>
                 </li>
@@ -1724,7 +1767,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
               <div className="flex justify-between"><span>Encryptie</span><span className="text-emerald-400">TLS 1.3</span></div>
               <div className="flex justify-between"><span>Server</span><span className="text-slate-300">NL — Amsterdam</span></div>
               <div className="flex justify-between"><span>Uptime</span><span className="text-emerald-400">99.9%</span></div>
-              <div className="flex justify-between"><span>Activatie</span><span className="text-[#ef4444]">≤ 5 minuten</span></div>
+              <div className="flex justify-between"><span>Activatie</span><span className="text-[#E0345F]">≤ 5 minuten</span></div>
             </div>
           </div>
         </div>
@@ -1755,10 +1798,10 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                 <>
                   <div className="space-y-1">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-black text-[#ef4444] uppercase tracking-widest">Stap {quizStep + 1} van 3</span>
+                      <span className="text-xs font-black text-[#E0345F] uppercase tracking-widest">Stap {quizStep + 1} van 3</span>
                       <button onClick={() => setShowQuiz(false)} className="text-slate-400 hover:text-slate-600 cursor-pointer">✕</button>
                     </div>
-                    <div className="h-1.5 bg-slate-100 rounded-full"><div className="h-full bg-[#ef4444] rounded-full transition-all duration-500" style={{ width: `${((quizStep + 1) / 3) * 100}%` }} /></div>
+                    <div className="h-1.5 bg-slate-100 rounded-full"><div className="h-full bg-[#E0345F] rounded-full transition-all duration-500" style={{ width: `${((quizStep + 1) / 3) * 100}%` }} /></div>
                     <h3 className="text-lg font-black text-slate-900 pt-2">{QUIZ_STEPS[quizStep].q}</h3>
                   </div>
                   <div className="space-y-2">
@@ -1766,9 +1809,9 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                       <button
                         key={opt.label}
                         onClick={() => { setQuizAnswers(a => [...a, opt.label]); setQuizStep(s => s + 1); }}
-                        className="w-full text-left px-4 py-3 rounded-2xl border border-slate-200 hover:border-[#ef4444] hover:bg-red-50 font-semibold text-slate-800 text-sm transition cursor-pointer flex items-center gap-3"
+                        className="w-full text-left px-4 py-3 rounded-2xl border border-slate-200 hover:border-[#E0345F] hover:bg-rose-50 font-semibold text-slate-800 text-sm transition cursor-pointer flex items-center gap-3"
                       >
-                        <span className="text-[#ef4444] shrink-0">{opt.icon}</span>
+                        <span className="text-[#E0345F] shrink-0">{opt.icon}</span>
                         {opt.label}
                       </button>
                     ))}
@@ -1778,8 +1821,8 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                 <div className="text-center space-y-4">
                   <div className="text-4xl">🎉</div>
                   <h3 className="text-xl font-black text-slate-900">Jouw beste keuze:</h3>
-                  <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
-                    <p className="text-2xl font-black text-[#ef4444]">{quizResult} pakket</p>
+                  <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4">
+                    <p className="text-2xl font-black text-[#E0345F]">{quizResult} pakket</p>
                     <p className="text-sm text-slate-500 mt-1">Gebaseerd op jouw antwoorden</p>
                   </div>
                   <button
@@ -1808,18 +1851,18 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                 {[{ n: "1", label: "Pakket" }, { n: "2", label: "Betaal" }, { n: "3", label: "Actief" }].map((s, i) => (
                   <React.Fragment key={s.n}>
                     <div className="flex flex-col items-center gap-1">
-                      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${i === 0 ? "bg-[#ef4444] text-white" : i === 1 ? "bg-[#ef4444] text-white" : "bg-slate-100 text-slate-400"}`}>
+                      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${i === 0 ? "bg-[#E0345F] text-white" : i === 1 ? "bg-[#E0345F] text-white" : "bg-slate-100 text-slate-400"}`}>
                         {i < 2 ? <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg> : s.n}
                       </div>
-                      <span className={`text-[9px] font-bold uppercase tracking-wide ${i < 2 ? "text-[#ef4444]" : "text-slate-400"}`}>{s.label}</span>
+                      <span className={`text-[9px] font-bold uppercase tracking-wide ${i < 2 ? "text-[#E0345F]" : "text-slate-400"}`}>{s.label}</span>
                     </div>
-                    {i < 2 && <div className={`h-0.5 w-10 mb-4 ${i === 0 ? "bg-[#ef4444]" : "bg-slate-200"}`} />}
+                    {i < 2 && <div className={`h-0.5 w-10 mb-4 ${i === 0 ? "bg-[#E0345F]" : "bg-slate-200"}`} />}
                   </React.Fragment>
                 ))}
               </div>
               <div className="text-center space-y-1">
-                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-red-50 border border-red-100 mx-auto">
-                  <ShoppingCart className="w-7 h-7 text-[#ef4444]" />
+                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-rose-50 border border-rose-100 mx-auto">
+                  <ShoppingCart className="w-7 h-7 text-[#E0345F]" />
                 </div>
                 <h3 className="text-xl font-black text-slate-900">Bevestig je bestelling</h3>
                 <p className="text-xs text-slate-500">Controleer je keuze voordat je naar WhatsApp gaat</p>
@@ -1831,7 +1874,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
                 {orderModal.vpn && <div className="flex justify-between"><span className="text-slate-500 font-medium">VPN</span><span className="font-black text-emerald-600">Inbegrepen</span></div>}
                 <div className="border-t border-slate-200 pt-3 flex justify-between items-center">
                   <span className="font-black text-slate-900">Totaal</span>
-                  <span className="text-2xl font-black text-[#ef4444]">€{orderModal.price.toFixed(2)}</span>
+                  <span className="text-2xl font-black text-[#E0345F]">€{orderModal.price.toFixed(2)}</span>
                 </div>
               </div>
               <div className="space-y-2">

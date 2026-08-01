@@ -89,7 +89,7 @@ export default function Support() {
     <div id="support-panel" className="space-y-8">
       {/* Header */}
       <div className="text-center space-y-3 max-w-2xl mx-auto">
-        <span className="text-[10px] font-black tracking-[0.2em] text-[#ef4444] uppercase bg-red-500/10 border border-red-500/20 px-3 py-1 rounded-full inline-block">
+        <span className="text-[10px] font-black tracking-[0.2em] text-[#E0345F] uppercase bg-rose-500/10 border border-rose-500/20 px-3 py-1 rounded-full inline-block">
           Compatibele apparaten
         </span>
         <h1 className="text-3xl font-black text-slate-900 tracking-tight">
@@ -112,11 +112,11 @@ export default function Support() {
               onClick={() => setActiveId(d.id)}
               className={`flex flex-col items-center gap-2.5 px-5 py-4 rounded-2xl border transition-all duration-200 cursor-pointer min-w-[110px] ${
                 isActive
-                  ? "bg-[#1a1a2e] border-[#ef4444]/40 text-white shadow-lg glow-red"
-                  : "glass-card text-slate-500 hover:text-slate-800 hover:border-[#ef4444]/30"
+                  ? "bg-[#1A0A10] border-[#E0345F]/40 text-white shadow-lg glow-red"
+                  : "glass-card text-slate-500 hover:text-slate-800 hover:border-[#E0345F]/30"
               }`}
             >
-              <DIcon className={`w-5 h-5 ${isActive ? "text-[#ef4444]" : "text-slate-400"}`} />
+              <DIcon className={`w-5 h-5 ${isActive ? "text-[#E0345F]" : "text-slate-400"}`} />
               <span className="text-[11px] font-bold text-center leading-tight">{d.label}</span>
             </button>
           );
@@ -138,7 +138,7 @@ export default function Support() {
             <div className="md:col-span-3 space-y-6">
               <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-[10px] font-black tracking-widest text-[#ef4444] uppercase">
+                  <span className="text-[10px] font-black tracking-widest text-[#E0345F] uppercase">
                     {device.compatible}
                   </span>
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -155,7 +155,7 @@ export default function Support() {
               <ol className="space-y-5">
                 {device.steps.map((step, i) => (
                   <li key={i} className="flex items-start gap-4">
-                    <span className="w-7 h-7 rounded-full bg-[#ef4444]/10 border border-[#ef4444]/30 flex items-center justify-center text-[11px] font-black text-[#ef4444] shrink-0 mt-0.5">
+                    <span className="w-7 h-7 rounded-full bg-[#E0345F]/10 border border-[#E0345F]/30 flex items-center justify-center text-[11px] font-black text-[#E0345F] shrink-0 mt-0.5">
                       {i + 1}
                     </span>
                     <span className="text-slate-700 text-sm leading-relaxed">{step}</span>
@@ -175,8 +175,8 @@ export default function Support() {
                 </div>
 
                 <div className="flex flex-col items-center text-center gap-3 py-4">
-                  <div className="w-14 h-14 rounded-full bg-[#ef4444]/10 border border-[#ef4444]/20 flex items-center justify-center">
-                    <Icon className="w-7 h-7 text-[#ef4444]" />
+                  <div className="w-14 h-14 rounded-full bg-[#E0345F]/10 border border-[#E0345F]/20 flex items-center justify-center">
+                    <Icon className="w-7 h-7 text-[#E0345F]" />
                   </div>
                   <div>
                     <div className="text-xs font-black text-slate-900 tracking-wider uppercase">
@@ -203,8 +203,8 @@ export default function Support() {
 
       {/* WhatsApp support banner */}
       <div className="glass-card rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5">
-        <div className="w-11 h-11 rounded-full bg-[#ef4444]/10 border border-[#ef4444]/20 flex items-center justify-center shrink-0">
-          <span className="text-[#ef4444] font-black text-lg">?</span>
+        <div className="w-11 h-11 rounded-full bg-[#E0345F]/10 border border-[#E0345F]/20 flex items-center justify-center shrink-0">
+          <span className="text-[#E0345F] font-black text-lg">?</span>
         </div>
         <div className="flex-1 min-w-0">
           <div className="font-black text-slate-900 text-sm">
