@@ -190,7 +190,7 @@ export default function App() {
               <span className="text-xs font-black text-[#E0345F]">v.a. €24,99 eenmalig</span>
               <a
                 data-cta="order"
-                href="https://wa.me/447414662070?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
+                href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20b859] text-white text-xs font-black px-4 py-2 rounded-xl transition active:scale-95"
@@ -248,7 +248,7 @@ export default function App() {
                   ))}
                 </ul>
                 <a
-                  href="https://wa.me/447414662070?text=Hallo%2C%20ik%20wil%20graag%20gebruik%20maken%20van%20het%20speciale%20aanbod%20van%203%20maanden%20gratis."
+                  href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20gebruik%20maken%20van%20het%20speciale%20aanbod%20van%203%20maanden%20gratis."
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setShowExitPopup(false)}
@@ -268,7 +268,7 @@ export default function App() {
       <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 flex flex-col items-end gap-2">
         <a
           data-cta="order"
-          href="https://wa.me/447414662070?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
+          href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
           target="_blank"
           rel="noopener noreferrer"
           className="w-14 h-14 bg-[#25D366] hover:bg-[#20b859] rounded-full shadow-2xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95 relative"
@@ -299,7 +299,7 @@ export default function App() {
             </div>
             <a
               data-cta="order"
-              href="https://wa.me/447414662070?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
+              href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
               target="_blank"
               rel="noopener noreferrer"
               className="shrink-0 flex items-center gap-2 bg-[#25D366] hover:bg-[#20b859] text-white text-sm font-black px-5 py-3 rounded-2xl transition active:scale-95 cursor-pointer"
@@ -333,7 +333,7 @@ export default function App() {
               <p className="text-sm text-slate-500 leading-relaxed">Het 15 maanden pakket bespaart je €494 ten opzichte van maandelijkse aanbieders. Exclusief voor jou: gratis installatiehulp.</p>
               <a
                 data-cta="order"
-                href="https://wa.me/447414662070?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
+                href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setShowRetention(false)}
