@@ -61,22 +61,22 @@ export default function App() {
   const [userStatus, setUserStatus] = useState<string>("Active");
 
   const [playlists, setPlaylists] = useState<PlaylistItem[]>(() => {
-    const saved = localStorage.getItem("streamvibe_playlists");
+    const saved = typeof localStorage === "undefined" ? null : localStorage.getItem("streamvibe_playlists");
     return saved ? JSON.parse(saved) : MOCK_PLAYLISTS;
   });
 
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(() => {
-    const saved = localStorage.getItem("streamvibe_pay_methods");
+    const saved = typeof localStorage === "undefined" ? null : localStorage.getItem("streamvibe_pay_methods");
     return saved ? JSON.parse(saved) : INITIAL_PAYMENT_METHODS;
   });
 
   const [invoices, setInvoices] = useState<BillingInvoice[]>(() => {
-    const saved = localStorage.getItem("streamvibe_invoices");
+    const saved = typeof localStorage === "undefined" ? null : localStorage.getItem("streamvibe_invoices");
     return saved ? JSON.parse(saved) : INITIAL_INVOICES;
   });
 
   const [favoriteChannels, setFavoriteChannels] = useState<string[]>(() => {
-    const saved = localStorage.getItem("streamvibe_favorites");
+    const saved = typeof localStorage === "undefined" ? null : localStorage.getItem("streamvibe_favorites");
     return saved ? JSON.parse(saved) : ["ch-1", "ch-3", "ch-5"];
   });
 
@@ -189,7 +189,8 @@ export default function App() {
             <div className="flex items-center gap-2">
               <span className="text-xs font-black text-[#E0345F]">v.a. €24,99 eenmalig</span>
               <a
-                href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
+                data-cta="order"
+                href="https://wa.me/447414662070?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20b859] text-white text-xs font-black px-4 py-2 rounded-xl transition active:scale-95"
@@ -247,7 +248,7 @@ export default function App() {
                   ))}
                 </ul>
                 <a
-                  href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20gebruik%20maken%20van%20het%20speciale%20aanbod%20van%203%20maanden%20gratis."
+                  href="https://wa.me/447414662070?text=Hallo%2C%20ik%20wil%20graag%20gebruik%20maken%20van%20het%20speciale%20aanbod%20van%203%20maanden%20gratis."
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setShowExitPopup(false)}
@@ -266,7 +267,8 @@ export default function App() {
       {/* Floating WhatsApp button */}
       <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 flex flex-col items-end gap-2">
         <a
-          href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
+          data-cta="order"
+          href="https://wa.me/447414662070?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
           target="_blank"
           rel="noopener noreferrer"
           className="w-14 h-14 bg-[#25D366] hover:bg-[#20b859] rounded-full shadow-2xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95 relative"
@@ -296,7 +298,8 @@ export default function App() {
               <p className="text-xs text-slate-400 mt-0.5"><span className="text-[#E0345F] font-black">€78,00</span> eenmalig · 4K · 20.000+</p>
             </div>
             <a
-              href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
+              data-cta="order"
+              href="https://wa.me/447414662070?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
               target="_blank"
               rel="noopener noreferrer"
               className="shrink-0 flex items-center gap-2 bg-[#25D366] hover:bg-[#20b859] text-white text-sm font-black px-5 py-3 rounded-2xl transition active:scale-95 cursor-pointer"
@@ -329,7 +332,8 @@ export default function App() {
               <h3 className="text-xl font-black text-slate-900">Wacht! Je verlaat een besparing van <span className="text-[#E0345F]">€494</span></h3>
               <p className="text-sm text-slate-500 leading-relaxed">Het 15 maanden pakket bespaart je €494 ten opzichte van maandelijkse aanbieders. Exclusief voor jou: gratis installatiehulp.</p>
               <a
-                href="https://wa.me/447832486269?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
+                data-cta="order"
+                href="https://wa.me/447414662070?text=Hallo%2C%20ik%20wil%20graag%20een%20IPTV%20pakket%20bestellen."
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setShowRetention(false)}
