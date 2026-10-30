@@ -26,12 +26,10 @@ export default function App() {
   const [showRetention, setShowRetention] = useState(false);
   const exitFired = useRef(false);
 
-  useEffect(() => {
-    history.pushState(null, "", window.location.href);
-    const onPop = () => { history.pushState(null, "", window.location.href); setShowRetention(true); };
-    window.addEventListener("popstate", onPop);
-    return () => window.removeEventListener("popstate", onPop);
-  }, []);
+  // The back button is left alone. It used to push a fake history entry so that
+  // "back" opened the retention offer instead of leaving — Google counts that as
+  // a deceptive pattern (back-button hijacking), and visitors hate it. The
+  // desktop exit-intent offer below stays.
 
   useEffect(() => {
     const onScroll = () => {

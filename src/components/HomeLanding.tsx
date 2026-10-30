@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { Wordmark } from "./Logo";
+import RealReviews from "./RealReviews";
 
 interface HomeLandingProps {
   moviesAndSeries: MovieOrSeries[];
@@ -554,10 +555,12 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
             <h1 className="mt-5 font-sans uppercase leading-[0.82] drop-shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
               <span className="block font-extralight tracking-[0.14em] text-white/95 text-[9vw] sm:text-[3.25rem] md:text-[4rem] lg:text-[4.5rem]">
                 Goedkope
-              </span>
+              </span>{" "}
               <span className="block font-black tracking-[-0.02em] text-gradient-rose text-[26vw] sm:text-[8.5rem] md:text-[10.5rem] lg:text-[13rem] mt-1">
                 IPTV
               </span>
+              {/* The lockup shows two words; the heading says the whole phrase. */}
+              <span className="sr-only"> kopen in Nederland</span>
             </h1>
 
             <p className="mt-6 text-white/75 text-sm sm:text-[15px] leading-relaxed max-w-md">
@@ -988,7 +991,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
             </span>
           </div>
           <h2 className="text-xl md:text-3xl font-black text-slate-900 tracking-tight">
-            Kies jouw pakket
+            Kies je goedkope IPTV abonnement
           </h2>
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -1208,144 +1211,8 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
 
       <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#E0345F]/30 to-transparent" /></div>
 
-      {/* 5. TESTIMONIALS */}
-      <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="space-y-8">
-        <div className="text-center max-w-xl mx-auto space-y-2">
-          <span className="text-xs text-[#E0345F] font-extrabold uppercase tracking-widest bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/10 font-roboto-slab">
-            Klantreviews
-          </span>
-          <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
-            Wat onze klanten zeggen
-          </h2>
-          <div className="flex items-center justify-center gap-1 pt-1">
-            {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
-            <span className="text-sm font-bold text-slate-700 ml-2">4.9 / 5</span>
-            <span className="text-xs text-slate-400 ml-1">(2.400+ reviews)</span>
-          </div>
-        </div>
-        {/* Klant van de maand */}
-        <div className="bg-gradient-to-r from-[#0E0E10] to-[#1A0A10] rounded-2xl p-5 md:p-6 flex flex-col sm:flex-row gap-4 items-start border border-[#E0345F]/20">
-          <div className="shrink-0 flex flex-col items-center gap-2">
-            <div className="relative">
-              <img src="https://i.pravatar.cc/80?img=33" alt="" className="w-16 h-16 rounded-full border-2 border-[#E0345F] object-cover" />
-              <span className="absolute -bottom-1 -right-1 bg-[#E0345F] text-white text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase">⭐ MVP</span>
-            </div>
-            <span className="text-[10px] font-black text-[#E0345F] uppercase tracking-widest whitespace-nowrap">Klant v/d Maand</span>
-          </div>
-          <div className="space-y-2 flex-1">
-            <div className="flex items-center gap-1">
-              {[...Array(5)].map((_,i) => <svg key={i} viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-amber-400"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>)}
-            </div>
-            <p className="text-white text-sm leading-relaxed">"Al meer dan een jaar klant en ik zou nooit meer teruggaan. Eredivisie in 4K zonder buffering, support reageert binnen minuten en de prijs is onverslaanbaar. Heb inmiddels 6 vrienden doorverwezen!"</p>
-            <div className="flex items-center justify-between pt-1">
-              <div>
-                <span className="font-black text-white text-sm">Ahmed B.</span>
-                <span className="text-slate-400 text-xs ml-2">Amsterdam · 15 maanden pakket</span>
-              </div>
-              <span className="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
-                <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Verified
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {[
-            {
-              name: "Daan Visser",
-              location: "Amsterdam",
-              avatar: "D",
-              color: "bg-rose-500",
-              rating: 5,
-              text: "Binnen 3 minuten alles ingesteld op mijn Samsung TV. Beeld is scherp, geen enkele buffer. Eredivisie in 4K — absoluut de beste keuze.",
-              plan: "6 Maanden pakket",
-            },
-            {
-              name: "Sophie van der Berg",
-              location: "Rotterdam",
-              avatar: "S",
-              color: "bg-emerald-500",
-              rating: 5,
-              text: "Super makkelijk via WhatsApp besteld. Ze reageerden binnen 2 minuten en alles werkte direct. NPO, RTL en alle Belgische zenders erbij — top!",
-              plan: "3 Maanden pakket",
-            },
-            {
-              name: "Bram de Jong",
-              location: "Den Haag",
-              avatar: "B",
-              color: "bg-blue-500",
-              rating: 5,
-              text: "Al 8 maanden klant en nog geen enkele storing gehad. 24/7 support is echt goed — mijn vraag werd op zondag om 23u direct beantwoord.",
-              plan: "15 Maanden pakket",
-            },
-            {
-              name: "Lotte Bakker",
-              location: "Utrecht",
-              avatar: "L",
-              color: "bg-rose-500",
-              rating: 5,
-              text: "Werkt perfect op mijn Firestick en telefoon tegelijk. Alle Nederlandse zenders, sport én Netflix-kwaliteit films — alles in één app. Aanrader!",
-              plan: "6 Maanden pakket",
-            },
-          ].map((r) => (
-            <div key={r.name} className="glass-card rounded-2xl p-5 md:p-6 space-y-3 md:space-y-4 flex flex-col">
-              <div className="flex items-center gap-1">
-                {[...Array(r.rating)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />)}
-              </div>
-              <p className="text-sm text-slate-700 leading-relaxed flex-1">"{r.text}"</p>
-              <div className="flex items-center gap-3 pt-2 border-t border-slate-100">
-                <div className={`w-10 h-10 rounded-full ${r.color} flex items-center justify-center text-white font-black text-base shrink-0`}>
-                  {r.avatar}
-                </div>
-                <div>
-                  <div className="font-bold text-sm text-slate-900">{r.name}</div>
-                  <div className="text-xs text-slate-400">{r.location} · {r.plan}</div>
-                </div>
-                <span className="ml-auto flex items-center gap-1 text-xs bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold shrink-0">
-                  <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                  Verified
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Customer photo strip */}
-        <div className="flex items-center justify-center gap-3 pt-2 flex-wrap">
-          <div className="flex items-center -space-x-3">
-            {[
-              "https://i.pravatar.cc/48?img=1",
-              "https://i.pravatar.cc/48?img=5",
-              "https://i.pravatar.cc/48?img=8",
-              "https://i.pravatar.cc/48?img=12",
-              "https://i.pravatar.cc/48?img=15",
-              "https://i.pravatar.cc/48?img=20",
-              "https://i.pravatar.cc/48?img=25",
-              "https://i.pravatar.cc/48?img=29",
-            ].map((src, i) => (
-              <img
-                key={i}
-                src={src}
-                alt=""
-                className="w-9 h-9 rounded-full border-2 border-white shadow-sm object-cover"
-                style={{ zIndex: 8 - i }}
-              />
-            ))}
-            <div className="w-9 h-9 rounded-full border-2 border-white bg-[#E0345F] flex items-center justify-center text-white text-[10px] font-black shadow-sm" style={{ zIndex: 0 }}>
-              +4K
-            </div>
-          </div>
-          <div className="text-sm text-slate-600">
-            <span className="font-black text-slate-900">4.800+</span> tevreden klanten in Nederland
-          </div>
-          <div className="flex items-center gap-0.5">
-            {[...Array(5)].map((_, i) => (
-              <svg key={i} viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-amber-400"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            ))}
-            <span className="text-xs font-bold text-slate-700 ml-1">4.9</span>
-          </div>
-        </div>
-      </motion.div>
+      {/* 5. TESTIMONIALS — real reviews from the customers' rating page */}
+      <RealReviews />
 
       <div className="flex items-center gap-3"><div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#E0345F]/30 to-transparent" /></div>
 
@@ -1433,7 +1300,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
           <span className="text-xs font-black tracking-widest text-[#E0345F] uppercase bg-rose-500/10 border border-rose-500/20 px-3 py-1.5 rounded-full inline-block font-roboto-slab">
             In 3 stappen live
           </span>
-          <h2 className="text-xl md:text-3xl font-black text-slate-900 tracking-tight">Hoe het werkt</h2>
+          <h2 className="text-xl md:text-3xl font-black text-slate-900 tracking-tight">IPTV kopen in 3 stappen</h2>
         </div>
         <div className="relative max-w-4xl mx-auto">
           <div className="hidden md:block absolute top-[52px] left-[calc(16.67%+28px)] right-[calc(16.67%+28px)] h-0.5 overflow-hidden">
@@ -1567,7 +1434,7 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
             Veelgestelde Vragen
           </span>
           <h2 className="text-xl md:text-3xl font-black text-slate-900 tracking-tight">
-            Alles wat je wilt weten
+            Veelgestelde vragen over IPTV kopen
           </h2>
         </div>
 
@@ -1672,11 +1539,34 @@ export default function HomeLanding({ moviesAndSeries, onPlayMedia, onSelectTab 
         <div className="relative z-10 max-w-2xl mx-auto space-y-6">
           <div className="text-5xl">🇳🇱</div>
           <h2 className="text-xl md:text-4xl font-black text-slate-900 tracking-tight">
-            De Beste Nederlandse IPTV Ervaring
+            Goedkope IPTV in Nederland
           </h2>
-          <p className="text-slate-500 text-sm leading-relaxed max-w-lg mx-auto font-roboto-slab">
-            Stream alle Nederlandse zenders, Eredivisie, Champions League en duizenden internationale kanalen in 4K Ultra HD. Bestel nu via WhatsApp — binnen 5 minuten actief.
-          </p>
+          {/*
+            The page's longer explanation of what it sells, in the words Dutch
+            viewers search with (goedkope IPTV, IPTV kopen, IPTV abonnement,
+            IPTV Nederland). Everything here matches the packs and the FAQ above.
+          */}
+          <div className="text-left text-slate-600 text-sm leading-relaxed max-w-xl mx-auto font-roboto-slab space-y-4">
+            <p>
+              Met goedkope IPTV kijk je televisie via je internetverbinding in plaats van via de kabel of een schotel.
+              Je hebt geen decoder of monteur nodig: een app op je Smart TV, Firestick, Android TV, Apple TV, telefoon
+              of laptop is genoeg. Daarmee kijk je alle Nederlandse zenders, zoals NPO 1, NPO 2, NPO 3, RTL 4, RTL 5,
+              RTL 7, SBS 6, Net5 en Veronica, plus Ziggo Sport en duizenden internationale zenders, met een tv-gids (EPG) erbij.
+            </p>
+            <h3 className="text-base font-black text-slate-900 font-sans">IPTV kopen zonder contract</h3>
+            <p>
+              Een IPTV abonnement bij GoedkopeIPTV koop je voor een vaste periode van 3, 6 of 15 maanden. Je betaalt één
+              keer, er is geen automatische verlenging en je zit nergens aan vast. Bestellen gaat via WhatsApp: je kiest
+              een pakket, betaalt met PayPal, Visa of Bitcoin en ontvangt je inloggegevens doorgaans binnen 5 minuten.
+              Twijfel je nog? Probeer dan eerst de testperiode van 24 uur.
+            </p>
+            <h3 className="text-base font-black text-slate-900 font-sans">Voetbal, films en series in 4K</h3>
+            <p>
+              Volg de Eredivisie, de Champions League en de Europa League live, en kijk daarnaast films en complete series
+              on demand. Met een stabiele verbinding van rond de 25 Mbps kijk je in 4K Ultra HD. Loopt er iets niet goed,
+              dan helpt onze Nederlandstalige klantenservice je via WhatsApp, 24 uur per dag.
+            </p>
+          </div>
           {/* QR code */}
           <div className="flex items-center justify-center gap-4 bg-white/60 border border-slate-200 rounded-2xl px-5 py-4 max-w-xs mx-auto">
             <img
